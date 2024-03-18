@@ -155,12 +155,17 @@ function Registration() {
               value={regData.password}
             />
             {!openEye && (
-              <FaRegEye className="eye" onClick={() => SetOpenEye(!openEye)} />
+              <FaRegEye
+                className="eye"
+                onClick={() => SetOpenEye(!openEye)}
+                style={{ color: "#03014C" }}
+              />
             )}
             {openEye && (
               <FaRegEyeSlash
                 className="eye"
                 onClick={() => SetOpenEye(!openEye)}
+                style={{ color: "#03014C" }}
               />
             )}
           </div>

@@ -5,10 +5,16 @@ import Button from "@mui/material/Button";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa6";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { RotatingLines } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Gimages from "../assets/Glogin.png";
 import images from "../assets/login.png";
 
 function Login() {
@@ -23,6 +29,7 @@ function Login() {
   const [openEye, SetOpenEye] = useState(false);
   const [loading, SetLoading] = useState(false);
   const Navigate = useNavigate();
+  const provider = new GoogleAuthProvider();
   const handleChange = (e) => {
     SetRegData({ ...regData, [e.target.name]: e.target.value });
     SetRegerror({ ...regerror, [e.target.name]: "" });
@@ -44,18 +51,31 @@ function Login() {
       signInWithEmailAndPassword(auth, regData.email, regData.password)
         .then((userCredential) => {
           SetLoading(false);
-          toast.success("Login Success", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
-          SetRegData({ ...regData, password: "" });
-          Navigate("/home");
+          if (!userCredential.user.emailVerified) {
+            toast.success("Please Varify Your Email First", {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          } else {
+            toast.success("Login Success", {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+            SetRegData({ ...regData, password: "" });
+            Navigate("/home");
+          }
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -65,9 +85,28 @@ function Login() {
           if (errorMessage.includes("auth/invalid-credential")) {
             SetRegerror({ ...regerror, email: "Email or Password is Wrong" });
           }
-          console.log();
         });
     }
+  };
+  const auth = getAuth();
+
+  const handleGlogin = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        toast.success("Login Success", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        SetRegData({ ...regData, password: "" });
+        Navigate("/home");
+      })
+      .catch((error) => {});
   };
   return (
     <div>
@@ -77,25 +116,26 @@ function Login() {
             style={{
               fontSize: "34px",
               fontWeight: "bold",
-              color: "#11175D",
-              paddingBottom: "13px",
+              color: "#03014C",
             }}
-            className="Nunito"
+            className="openSans"
           >
-            Get started with easily register
+            Login to your account!
           </h2>
-          <p style={{ fontSize: "21px", color: "black", paddingBottom: "5px" }}>
-            Free register and you can enjoy it
-          </p>
+          <img
+            src={Gimages}
+            alt=""
+            style={{ marginTop: "29px", cursor: "pointer" }}
+            onClick={handleGlogin}
+          />
           <div style={{ width: "90%" }}>
             <TextField
               id="outlined-basic"
               label="Email Address"
               variant="outlined"
-              style={{ width: "100%", marginTop: "34px" }}
+              style={{ width: "100%", marginTop: "30px" }}
               onChange={handleChange}
               name="email"
-              className="Nunito"
               value={regData.email}
             />
             {regerror.email && (
@@ -121,12 +161,17 @@ function Login() {
               value={regData.password}
             />
             {!openEye && (
-              <FaRegEye className="eye" onClick={() => SetOpenEye(!openEye)} />
+              <FaRegEye
+                className="eye"
+                onClick={() => SetOpenEye(!openEye)}
+                style={{ color: "#03014C" }}
+              />
             )}
             {openEye && (
               <FaRegEyeSlash
                 className="eye"
                 onClick={() => SetOpenEye(!openEye)}
+                style={{ color: "#03014C" }}
               />
             )}
           </div>
@@ -138,18 +183,18 @@ function Login() {
           <Button
             variant="contained"
             style={{
-              width: "368px",
+              width: "90%",
               borderRadius: "86px",
               marginBottom: "34px",
               marginTop: "34px",
               display: "flex",
               gap: "0 10px",
+              padding: "27px 0",
             }}
             onClick={handleClick}
-            className="Nunito"
             disabled={loading ? true : false}
           >
-            Sign Up
+            Login to Continue
             {loading && (
               <RotatingLines
                 visible={true}
@@ -164,10 +209,27 @@ function Login() {
               />
             )}
           </Button>
+          <span
+            className="openSans"
+            style={{
+              display: "block",
+              marginBottom: "20px",
+              color: "#03014C",
+              marginTop: "20px",
+            }}
+          >
+            Forgot Password ?{" "}
+            <Link
+              to="/forgotpassword"
+              style={{ color: "#EA6C00", marginLeft: "5px" }}
+            >
+              Click Here
+            </Link>
+          </span>
 
-          <span style={{ color: "#03014C" }} className="Nunito">
-            Already have an account ?{" "}
-            <Link to="/" style={{ color: "#EA6C00" }}>
+          <span style={{ color: "#03014C" }} className="openSans">
+            Don’t have an account ?
+            <Link to="/" style={{ color: "#EA6C00", marginLeft: "5px" }}>
               Sign Up
             </Link>
           </span>
