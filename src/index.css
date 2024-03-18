@@ -1,0 +1,21 @@
+.Nunito {
+  font-family: "Nunito", sans-serif !important;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  color: #11175d !important;
+}
+.password {
+  position: relative;
+  width: 90%;
+  margin-top: 34px;
+}
+.password .eye {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+}
