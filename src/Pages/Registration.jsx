@@ -13,6 +13,7 @@ import {
 import { RotatingLines } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import images from "../assets/registration.png";
 
 function Registration() {
   const [regData, SetRegData] = useState({
@@ -207,7 +208,7 @@ function Registration() {
         </Grid>
         <Grid xs={6} style={{ height: "827px" }}>
           <img
-            src="../src/assets/registration.png"
+            src={images}
             alt=""
             style={{ height: "100%", objectFit: "cover", width: "100%" }}
           />
