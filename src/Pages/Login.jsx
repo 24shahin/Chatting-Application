@@ -9,6 +9,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { RotatingLines } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import images from "../assets/login.png";
 
 function Login() {
   const [regData, SetRegData] = useState({
@@ -54,7 +55,7 @@ function Login() {
             theme: "dark",
           });
           SetRegData({ ...regData, password: "" });
-          Navigate("/");
+          Navigate("/home");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -166,14 +167,14 @@ function Login() {
 
           <span style={{ color: "#03014C" }} className="Nunito">
             Already have an account ?{" "}
-            <Link to="/registration" style={{ color: "#EA6C00" }}>
+            <Link to="/" style={{ color: "#EA6C00" }}>
               Sign Up
             </Link>
           </span>
         </Grid>
         <Grid xs={6}>
           <img
-            src="../src/assets/login.png"
+            src={images}
             alt=""
             style={{ height: "100%", objectFit: "cover", width: "100%" }}
           />
