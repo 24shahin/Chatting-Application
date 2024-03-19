@@ -47,7 +47,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  row-gap: 30px;
 }
 .userImg {
   width: 80%;
+}
+.Navicon {
+  font-size: 40px;
+}
+.logbuttons {
+  display: flex;
+  column-gap: 20px;
+  margin-top: 15px;
 }
