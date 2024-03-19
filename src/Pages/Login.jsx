@@ -52,7 +52,7 @@ function Login() {
         .then((userCredential) => {
           SetLoading(false);
           if (!userCredential.user.emailVerified) {
-            toast.success("Please Varify Your Email First", {
+            toast.error("Please Varify Your Email First", {
               position: "top-center",
               autoClose: 3000,
               hideProgressBar: false,
@@ -74,7 +74,7 @@ function Login() {
               theme: "dark",
             });
             SetRegData({ ...regData, password: "" });
-            Navigate("/home");
+            Navigate("/pages");
           }
         })
         .catch((error) => {
@@ -104,7 +104,7 @@ function Login() {
           theme: "dark",
         });
         SetRegData({ ...regData, password: "" });
-        Navigate("/home");
+        Navigate("/pages");
       })
       .catch((error) => {});
   };
