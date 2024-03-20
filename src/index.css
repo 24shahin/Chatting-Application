@@ -39,7 +39,7 @@
   position: absolute;
 }
 .cXeqit {
-  position: absolute;
+  position: absolute !important;
 }
 .navbox {
   border-radius: 20px;
