@@ -195,7 +195,7 @@ function Login() {
             disabled={loading ? true : false}
           >
             Login to Continue
-            {loading && (
+            {!loading && (
               <RotatingLines
                 visible={true}
                 height="30"
