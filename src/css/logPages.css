@@ -1,0 +1,312 @@
+.d {
+  display: flex;
+  column-gap: 10px;
+  justify-content: center;
+}
+.stylebtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  border: none;
+}
+.style1btn {
+  background: rgb(199, 221, 71);
+}
+.style2btn {
+  background: rgb(201, 151, 43);
+}
+
+.containerBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.singcontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 550px;
+  width: 100% !important;
+}
+.move {
+  right: 50% !important;
+  background-color: #2ecc71 !important;
+}
+.style1 .box {
+  position: relative;
+  width: 90%;
+  height: 100%;
+  border: 1px solid rgb(218, 206, 206);
+  box-shadow: 0px 1px 115px 6px #c1b4b4b2;
+  display: flex;
+  overflow: hidden;
+}
+
+.overlay {
+  background: #1abc9c;
+  position: absolute;
+  right: 0%;
+  top: 0;
+  height: 100%;
+  transition: all 0.7s ease-in-out;
+  width: 50%;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 22pc;
+}
+.move2 {
+  border-top-left-radius: 100px;
+  border-bottom-left-radius: 22pc;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.style1 .logInPart,
+.style1 .signUp {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.style1 .singInButton {
+  position: absolute;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  transition: all 0.7s ease-in-out;
+  opacity: 1;
+  visibility: visible;
+}
+.style1 .signInButtonMove {
+  position: absolute;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  transition: all 0.7s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+}
+.style1 .signIninputPart {
+  position: absolute;
+  right: 0%;
+  width: 100%;
+  height: 100%;
+  transition: all 0.7s ease-in-out;
+  opacity: 1;
+  visibility: visible;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.style1 .signInInputMove {
+  position: absolute;
+  right: 0%;
+  width: 100%;
+  height: 100%;
+  transition: all 0.7s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.style1 .signUpButton {
+  position: absolute;
+  right: 0%;
+  width: 100%;
+  height: 100%;
+  transition: all 0.7s ease-in-out;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: all 0.6s ease-in-out;
+}
+.style1 .signUpButtonMove {
+  position: absolute;
+  right: 0%;
+  width: 100%;
+  height: 100%;
+  transition: all 0.7s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+}
+.style1 .signUpInputpart {
+  position: absolute;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  transition: all 0.7s ease-in-out;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: all 0.6s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.style1 .signUpinputMove {
+  position: absolute;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  transition: all 0.7s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.style2 .box {
+  position: relative;
+  width: 90%;
+  height: 100%;
+  border: 1px solid rgb(218, 206, 206);
+  box-shadow: 0px 1px 115px 6px #c1b4b4b2;
+  display: flex;
+  overflow: hidden;
+}
+
+.logInPart,
+.signUp {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  display: flex;
+}
+
+.signUp {
+  order: 2;
+}
+.logInPart {
+  order: 1;
+}
+.style2 .singInButton {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(0);
+  transition: all 0.7s ease-in-out;
+}
+.style2 .signInButtonMove {
+  transform: translateX(-100%);
+  transition: all 0.7s ease-in-out;
+  width: 100%;
+}
+.style2 .signIninputPart {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(0);
+  transition: all 0.7s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.style2 .signInInputMove {
+  transform: translateX(100%);
+  transition: all 0.7s ease-in-out;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.style2 .signUpButton {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(0);
+  transition: all 0.7s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.style2 .signUpButtonMove {
+  transform: translateX(-100%);
+  transition: all 0.7s ease-in-out;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.style2 .signUpInputpart {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(0);
+  transition: all 0.7s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.signUpInputInner h2 {
+  text-align: center;
+  font-size: 40px;
+  color: #fff;
+  padding-bottom: 10px;
+}
+.signUpInputInner p {
+  text-align: center;
+  font-size: 24px;
+  color: #fff;
+}
+.signUpInputInner {
+  text-align: center;
+  padding: 55px;
+}
+.signUpInputInner button {
+  padding: 10px 30px;
+  border: none;
+  border-radius: 4px;
+  color: #2ecc71;
+  background: #fff;
+  font-weight: 600;
+  margin-top: 20px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.signInInputInner h2 {
+  text-align: center;
+  font-size: 40px;
+  color: #fff;
+  padding-bottom: 10px;
+}
+.signInInputInner p {
+  text-align: center;
+  font-size: 24px;
+  color: #fff;
+}
+.signInInputInner {
+  text-align: center;
+  padding: 55px;
+}
+.signInInputInner button {
+  padding: 10px 30px;
+  border: none;
+  border-radius: 4px;
+  color: #1abc9c;
+  background: #fff;
+  font-weight: 600;
+  margin-top: 20px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+.style2 .signUpinputMove {
+  transform: translateX(-100%);
+  transition: all 0.7s ease-in-out;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

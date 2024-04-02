@@ -4,24 +4,27 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import Login from "./Pages/Login";
-import Registration from "./Pages/Registration";
+import Login from "./components/Login";
 import { ToastContainer } from "react-toastify";
 import ForgotPassword from "./Pages/ForgotPassword";
 import Massage from "./Pages/Massage";
 import Setting from "./Pages/Setting";
 import Pages from "./Pages/Pages";
+import LogPages from "./Pages/LogPages";
+import Home from "./Pages/Home";
+import Notifiactions from "./Pages/Notifiactions";
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/" element={<Registration />}></Route>
+        <Route path="/" element={<LogPages />}></Route>
         <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
         <Route path="/pages" element={<Pages />}>
+          <Route path="home" element={<Home />}></Route>
           <Route path="massage" element={<Massage />}></Route>
-          <Route path="setting" element={<Setting />}></Route>
+          <Route path="notifications" element={<Notifiactions />}></Route>
+          <Route path="settings" element={<Setting />}></Route>
         </Route>
       </>
     )

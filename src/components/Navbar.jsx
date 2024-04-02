@@ -11,7 +11,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { activeUser } from "../Slices/userSlice";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -28,6 +30,7 @@ function Navbar() {
     boxShadow: 24,
     p: 4,
   };
+  let dispatch = useDispatch();
 
   const auth = getAuth();
   let Navigate = useNavigate();
@@ -45,7 +48,9 @@ function Navbar() {
           progress: undefined,
           theme: "dark",
         });
-        Navigate("/login");
+        localStorage.removeItem("user");
+        dispatch(activeUser(null));
+        Navigate("/");
       })
       .catch((error) => {
         console.log(error);
@@ -55,10 +60,19 @@ function Navbar() {
   return (
     <div className="navbox">
       <Images src={profile} style={"userImg"} />
-      <FaHome className="Navicon" />
-      <FaMessage className="Navicon" />
-      <IoIosNotifications className="Navicon" />
-      <IoSettings className="Navicon" />
+      <Link to={"/pages/home"}>
+        <FaHome className="Navicon" />
+      </Link>
+      <Link to={"/pages/massage"}>
+        {" "}
+        <FaMessage className="Navicon" />
+      </Link>
+      <Link to={"/pages/notifications"}>
+        <IoIosNotifications className="Navicon" />
+      </Link>
+      <Link to={"/pages/settings"}>
+        <IoSettings className="Navicon" />
+      </Link>
       <FaSignOutAlt className="Navicon" onClick={handleOpen} />
 
       <Modal

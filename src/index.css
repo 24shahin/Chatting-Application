@@ -10,8 +10,8 @@
 }
 .password {
   position: relative;
-  width: 90%;
-  margin-top: 34px;
+  width: 70%;
+  margin: 34px auto 0;
 }
 .password .eye {
   position: absolute;

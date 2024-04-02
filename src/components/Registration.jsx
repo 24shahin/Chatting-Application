@@ -13,9 +13,8 @@ import {
 import { RotatingLines } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import images from "../assets/registration.png";
 
-function Registration() {
+function Registration({ onRegistrationComplete }) {
   const [regData, SetRegData] = useState({
     name: "",
     email: "",
@@ -67,7 +66,7 @@ function Registration() {
               }
             );
             SetRegData({ ...regData, name: "", email: "", password: "" });
-            Navigate("/login");
+            onRegistrationComplete();
           });
 
           console.log("userCredential", userCredential);
@@ -86,7 +85,7 @@ function Registration() {
   return (
     <div>
       <Grid container>
-        <Grid xs={6} style={{ padding: "225px 59px 117px 120px" }}>
+        <Grid xs={12} style={{ textAlign: "center", padding: "30px" }}>
           <h2
             style={{
               fontSize: "34px",
@@ -101,7 +100,7 @@ function Registration() {
           <p style={{ fontSize: "21px", color: "black", paddingBottom: "5px" }}>
             Free register and you can enjoy it
           </p>
-          <div style={{ width: "90%" }}>
+          <div style={{ width: "70%", margin: "0 auto" }}>
             <TextField
               id="outlined-basic"
               label="Email Address"
@@ -122,7 +121,7 @@ function Registration() {
               </Alert>
             )}
           </div>
-          <div style={{ width: "90%" }}>
+          <div style={{ width: "70%", margin: "0 auto" }}>
             <TextField
               id="outlined-basic"
               label="Full Name"
@@ -177,12 +176,10 @@ function Registration() {
           <Button
             variant="contained"
             style={{
-              width: "368px",
+              width: "340px",
               borderRadius: "86px",
-              marginBottom: "34px",
-              marginTop: "34px",
-              display: "flex",
-              gap: "0 10px",
+              margin: "34px auto",
+              padding: "15px 0",
             }}
             onClick={handleClick}
             className="Nunito"
@@ -203,20 +200,6 @@ function Registration() {
               />
             )}
           </Button>
-
-          <span style={{ color: "#03014C" }} className="Nunito">
-            Already have an account ?{" "}
-            <Link to="/login" style={{ color: "#EA6C00" }}>
-              Sign In
-            </Link>
-          </span>
-        </Grid>
-        <Grid xs={6} style={{ height: "827px" }}>
-          <img
-            src={images}
-            alt=""
-            style={{ height: "100%", objectFit: "cover", width: "100%" }}
-          />
         </Grid>
       </Grid>
     </div>

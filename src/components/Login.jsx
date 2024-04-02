@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa6";
 import {
@@ -15,7 +15,8 @@ import { RotatingLines } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Gimages from "../assets/Glogin.png";
-import images from "../assets/login.png";
+import { useDispatch, useSelector } from "react-redux";
+import { activeUser } from "../Slices/userSlice";
 
 function Login() {
   const [regData, SetRegData] = useState({
@@ -34,6 +35,13 @@ function Login() {
     SetRegData({ ...regData, [e.target.name]: e.target.value });
     SetRegerror({ ...regerror, [e.target.name]: "" });
   };
+  let dispatch = useDispatch();
+  let data = useSelector((state) => state?.user?.value);
+  useEffect(() => {
+    if (data?.email) {
+      Navigate("/pages");
+    }
+  }, []);
   const handleClick = () => {
     let pattern =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -74,6 +82,8 @@ function Login() {
               theme: "dark",
             });
             SetRegData({ ...regData, password: "" });
+            localStorage.setItem("user", JSON.stringify(userCredential.user));
+            dispatch(activeUser(userCredential.user));
             Navigate("/pages");
           }
         })
@@ -111,12 +121,12 @@ function Login() {
   return (
     <div>
       <Grid container>
-        <Grid xs={6} style={{ padding: "225px 59px 117px 120px" }}>
+        <Grid xs={12} style={{ textAlign: "center", padding: "30px" }}>
           <h2
             style={{
               fontSize: "34px",
               fontWeight: "bold",
-              color: "#03014C",
+              color: "#11175D",
             }}
             className="openSans"
           >
@@ -128,7 +138,7 @@ function Login() {
             style={{ marginTop: "29px", cursor: "pointer" }}
             onClick={handleGlogin}
           />
-          <div style={{ width: "90%" }}>
+          <div style={{ width: "70%", margin: "0 auto" }}>
             <TextField
               id="outlined-basic"
               label="Email Address"
@@ -183,13 +193,10 @@ function Login() {
           <Button
             variant="contained"
             style={{
-              width: "90%",
+              width: "70%",
               borderRadius: "86px",
-              marginBottom: "34px",
-              marginTop: "34px",
-              display: "flex",
-              gap: "0 10px",
-              padding: "27px 0",
+              margin: "34px auto 0",
+              padding: "15px 0",
             }}
             onClick={handleClick}
             disabled={loading ? true : false}
@@ -226,20 +233,6 @@ function Login() {
               Click Here
             </Link>
           </span>
-
-          <span style={{ color: "#03014C" }} className="openSans">
-            Don’t have an account ?
-            <Link to="/" style={{ color: "#EA6C00", marginLeft: "5px" }}>
-              Sign Up
-            </Link>
-          </span>
-        </Grid>
-        <Grid xs={6}>
-          <img
-            src={images}
-            alt=""
-            style={{ height: "100%", objectFit: "cover", width: "100%" }}
-          />
         </Grid>
       </Grid>
     </div>
