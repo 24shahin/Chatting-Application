@@ -49,8 +49,13 @@
   align-items: center;
   row-gap: 30px;
 }
+.userProfile {
+  text-align: center;
+}
 .userImg {
-  width: 80%;
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
 }
 .Navicon {
   font-size: 40px;

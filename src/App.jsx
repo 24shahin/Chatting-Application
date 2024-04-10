@@ -4,7 +4,6 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import Login from "./components/Login";
 import { ToastContainer } from "react-toastify";
 import ForgotPassword from "./Pages/ForgotPassword";
 import Massage from "./Pages/Massage";

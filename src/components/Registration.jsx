@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Link, Navigate, useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa6";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import { RotatingLines } from "react-loader-spinner";
 import { toast } from "react-toastify";
@@ -27,7 +27,7 @@ function Registration({ onRegistrationComplete }) {
   });
   const [openEye, SetOpenEye] = useState(false);
   const [loading, SetLoading] = useState(false);
-  const Navigate = useNavigate();
+
   const handleChange = (e) => {
     SetRegData({ ...regData, [e.target.name]: e.target.value });
     SetRegerror({ ...regerror, [e.target.name]: "" });
@@ -50,24 +50,35 @@ function Registration({ onRegistrationComplete }) {
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, regData.email, regData.password)
         .then((userCredential) => {
-          SetLoading(false);
-          sendEmailVerification(auth.currentUser).then(() => {
-            toast.success(
-              "Registration Success, Please Check Your Email for Varification",
-              {
-                position: "top-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              }
-            );
-            SetRegData({ ...regData, name: "", email: "", password: "" });
-            onRegistrationComplete();
-          });
+          updateProfile(auth.currentUser, {
+            displayName: regData.name,
+            photoURL:
+              "https://firebasestorage.googleapis.com/v0/b/chatting-application-b6c69.appspot.com/o/avatar%2Favatar.jpg?alt=media&token=133ca0e4-fa6d-4881-ac34-27d9956bb3fe",
+          })
+            .then(() => {
+              SetLoading(false);
+              sendEmailVerification(auth.currentUser).then(() => {
+                toast.success(
+                  "Registration Success, Please Check Your Email for Varification",
+                  {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  }
+                );
+                SetRegData({ ...regData, name: "", email: "", password: "" });
+                onRegistrationComplete();
+              });
+            })
+            .catch((error) => {
+              SetLoading(false);
+              console.log(error);
+            });
 
           console.log("userCredential", userCredential);
         })

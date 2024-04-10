@@ -10,6 +10,7 @@ export const userSlice = createSlice({
   reducers: {
     activeUser: (state, action) => {
       console.log("ami", action.payload);
+      // console.log(action.payload.photoURL);
       state.value = action.payload;
     },
   },

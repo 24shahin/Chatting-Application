@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Images from "./Images";
-import profile from "../assets/profile.png";
 import { FaHome, FaSignOutAlt } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 import { IoIosNotifications } from "react-icons/io";
@@ -12,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../Slices/userSlice";
 
 function Navbar() {
@@ -31,6 +29,7 @@ function Navbar() {
     p: 4,
   };
   let dispatch = useDispatch();
+  let userInfo = useSelector((state) => state?.user?.value);
 
   const auth = getAuth();
   let Navigate = useNavigate();
@@ -59,7 +58,10 @@ function Navbar() {
 
   return (
     <div className="navbox">
-      <Images src={profile} style={"userImg"} />
+      <div className="userProfile">
+        <img src={userInfo.photoURL} className={"userImg"} alt="" />
+        <h2 style={{ fontSize: "20px" }}>{userInfo.displayName}</h2>
+      </div>
       <Link to={"/pages/home"}>
         <FaHome className="Navicon" />
       </Link>
