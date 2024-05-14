@@ -39,7 +39,7 @@ function Login() {
   let data = useSelector((state) => state?.user?.value);
   useEffect(() => {
     if (data?.email) {
-      Navigate("/pages");
+      Navigate("/pages/home");
     }
   }, []);
   const handleClick = () => {
@@ -59,33 +59,47 @@ function Login() {
       signInWithEmailAndPassword(auth, regData.email, regData.password)
         .then((userCredential) => {
           SetLoading(false);
-          if (!userCredential.user.emailVerified) {
-            toast.error("Please Varify Your Email First", {
-              position: "top-center",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-          } else {
-            toast.success("Login Success", {
-              position: "top-center",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-            SetRegData({ ...regData, password: "" });
-            localStorage.setItem("user", JSON.stringify(userCredential.user));
-            dispatch(activeUser(userCredential.user));
-            Navigate("/pages");
-          }
+          // if (!userCredential.user.emailVerified) {
+          //   toast.error("Please Varify Your Email First", {
+          //     position: "top-center",
+          //     autoClose: 3000,
+          //     hideProgressBar: false,
+          //     closeOnClick: true,
+          //     pauseOnHover: true,
+          //     draggable: true,
+          //     progress: undefined,
+          //     theme: "dark",
+          //   });
+          // } else {
+          //   toast.success("Login Success", {
+          //     position: "top-center",
+          //     autoClose: 3000,
+          //     hideProgressBar: false,
+          //     closeOnClick: true,
+          //     pauseOnHover: true,
+          //     draggable: true,
+          //     progress: undefined,
+          //     theme: "dark",
+          //   });
+          //   SetRegData({ ...regData, password: "" });
+          //   localStorage.setItem("user", JSON.stringify(userCredential.user));
+          //   dispatch(activeUser(userCredential.user));
+          //   Navigate("/pages");
+          // }
+          toast.success("Login Success", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+          SetRegData({ ...regData, password: "" });
+          localStorage.setItem("user", JSON.stringify(userCredential.user));
+          dispatch(activeUser(userCredential.user));
+          Navigate("/pages/home");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -120,8 +134,8 @@ function Login() {
   };
   return (
     <div>
-      <Grid container>
-        <Grid xs={12} style={{ textAlign: "center", padding: "30px" }}>
+      <Grid item container>
+        <Grid item xs={12} style={{ textAlign: "center", padding: "30px" }}>
           <h2
             style={{
               fontSize: "34px",
@@ -140,7 +154,6 @@ function Login() {
           />
           <div style={{ width: "70%", margin: "0 auto" }}>
             <TextField
-              id="outlined-basic"
               label="Email Address"
               variant="outlined"
               style={{ width: "100%", marginTop: "30px" }}
@@ -161,7 +174,6 @@ function Login() {
 
           <div className="password">
             <TextField
-              id="outlined-basic"
               label="Password"
               type={openEye ? "text" : "password"}
               variant="outlined"

@@ -14,11 +14,11 @@ function Pages() {
     }
   }, []);
   return (
-    <Grid container>
-      <Grid xs={1} style={{ background: "red" }}>
+    <Grid container spacing={2}>
+      <Grid item xs={1}>
         <Navbar />
       </Grid>
-      <Grid xs={11} style={{ background: "green" }}>
+      <Grid item xs={11}>
         <Outlet />
       </Grid>
     </Grid>

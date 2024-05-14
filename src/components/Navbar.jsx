@@ -9,14 +9,21 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../Slices/userSlice";
+import ImagesCropper from "./ImagesCropper";
 
 function Navbar() {
+  // log out modal
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  // UserImg Modal
+  const [userImg, setUserImg] = useState(false);
+  const handleOpenUserImg = () => setUserImg(true);
+  const handleCloseUserImg = () => setUserImg(false);
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -29,10 +36,11 @@ function Navbar() {
     p: 4,
   };
   let dispatch = useDispatch();
-  let userInfo = useSelector((state) => state?.user?.value);
+  let userinfo = useSelector((state) => state?.user?.value);
 
   const auth = getAuth();
   let Navigate = useNavigate();
+  let location = useLocation();
 
   const handleLogout = () => {
     signOut(auth)
@@ -59,22 +67,61 @@ function Navbar() {
   return (
     <div className="navbox">
       <div className="userProfile">
-        <img src={userInfo.photoURL} className={"userImg"} alt="" />
-        <h2 style={{ fontSize: "20px" }}>{userInfo.displayName}</h2>
+        <img
+          src={userinfo.photoURL}
+          className={"userImg"}
+          alt=""
+          onClick={handleOpenUserImg}
+        />
+        <h2 style={{ fontSize: "20px" }}>{userinfo.displayName}</h2>
+        <Modal
+          open={userImg}
+          onClose={handleCloseUserImg}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <ImagesCropper />
+          </Box>
+        </Modal>
       </div>
-      <Link to={"/pages/home"}>
-        <FaHome className="Navicon" />
-      </Link>
-      <Link to={"/pages/massage"}>
-        {" "}
-        <FaMessage className="Navicon" />
-      </Link>
-      <Link to={"/pages/notifications"}>
-        <IoIosNotifications className="Navicon" />
-      </Link>
-      <Link to={"/pages/settings"}>
-        <IoSettings className="Navicon" />
-      </Link>
+      <div className="navitem">
+        <Link
+          to={"/pages/home"}
+          className={`${
+            location.pathname == "/pages" || location.pathname == "/pages/home"
+              ? "active"
+              : null
+          } Navicon`}
+        >
+          <FaHome className="Navicon" />
+        </Link>
+        <Link
+          to={"/pages/massage"}
+          className={`${
+            location.pathname == "/pages/massage" ? "active" : null
+          } Navicon`}
+        >
+          {" "}
+          <FaMessage className="Navicon" />
+        </Link>
+        <Link
+          to={"/pages/notifications"}
+          className={`${
+            location.pathname == "/pages/notifications" ? "active" : null
+          } Navicon`}
+        >
+          <IoIosNotifications className="Navicon" />
+        </Link>
+        <Link
+          to={"/pages/settings"}
+          className={`${
+            location.pathname == "/pages/settings" ? "active" : null
+          } Navicon`}
+        >
+          <IoSettings className="Navicon" />
+        </Link>
+      </div>
       <FaSignOutAlt className="Navicon" onClick={handleOpen} />
 
       <Modal

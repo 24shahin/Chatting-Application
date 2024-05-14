@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -10,9 +10,11 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 import { RotatingLines } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
 
 function Registration({ onRegistrationComplete }) {
   const [regData, SetRegData] = useState({
@@ -32,6 +34,7 @@ function Registration({ onRegistrationComplete }) {
     SetRegData({ ...regData, [e.target.name]: e.target.value });
     SetRegerror({ ...regerror, [e.target.name]: "" });
   };
+  const db = getDatabase();
   const handleClick = () => {
     let pattern =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -55,6 +58,13 @@ function Registration({ onRegistrationComplete }) {
             photoURL:
               "https://firebasestorage.googleapis.com/v0/b/chatting-application-b6c69.appspot.com/o/avatar%2Favatar.jpg?alt=media&token=133ca0e4-fa6d-4881-ac34-27d9956bb3fe",
           })
+            .then(() => {
+              set(ref(db, "users/" + userCredential.user.uid), {
+                username: regData.name,
+                email: regData.email,
+                photoURL: userCredential.user.photoURL,
+              });
+            })
             .then(() => {
               SetLoading(false);
               sendEmailVerification(auth.currentUser).then(() => {
@@ -93,10 +103,17 @@ function Registration({ onRegistrationComplete }) {
         });
     }
   };
+  let userInfo = useSelector((state) => state?.user?.value);
+  useEffect(() => {
+    if (userInfo?.email) {
+      Navigate("/pages/home");
+    }
+  }, []);
+
   return (
     <div>
-      <Grid container>
-        <Grid xs={12} style={{ textAlign: "center", padding: "30px" }}>
+      <Grid item container>
+        <Grid item xs={12} style={{ textAlign: "center", padding: "30px" }}>
           <h2
             style={{
               fontSize: "34px",
@@ -113,7 +130,6 @@ function Registration({ onRegistrationComplete }) {
           </p>
           <div style={{ width: "70%", margin: "0 auto" }}>
             <TextField
-              id="outlined-basic"
               label="Email Address"
               variant="outlined"
               style={{ width: "100%", marginTop: "34px" }}
@@ -134,7 +150,6 @@ function Registration({ onRegistrationComplete }) {
           </div>
           <div style={{ width: "70%", margin: "0 auto" }}>
             <TextField
-              id="outlined-basic"
               label="Full Name"
               variant="outlined"
               style={{ width: "100%", marginTop: "34px" }}
@@ -155,7 +170,6 @@ function Registration({ onRegistrationComplete }) {
           </div>
           <div className="password">
             <TextField
-              id="outlined-basic"
               label="Password"
               type={openEye ? "text" : "password"}
               variant="outlined"
