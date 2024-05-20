@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { getDatabase, ref, onValue, remove } from "firebase/database";
+import { useSelector } from "react-redux";
 
 function BlockList() {
   const db = getDatabase();
+  const userinfo = useSelector((state) => state?.user?.value);
   // showing block list
   const [blockList, setBlockList] = useState([]);
   useEffect(() => {
@@ -11,7 +13,9 @@ function BlockList() {
     onValue(starCountRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        arr.push({ ...item.val(), blockid: item.key });
+        if (item.val().blockedbyid == userinfo.uid) {
+          arr.push({ ...item.val(), blockid: item.key });
+        }
       });
       setBlockList(arr);
     });

@@ -28,13 +28,14 @@ const VisuallyHiddenInput = styled("input")({
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 
-function ImagesCropper() {
+function ImagesCropper({ profilepic }) {
   let dispatch = useDispatch();
   const storage = getStorage();
-  let userInfo = useSelector((state) => state?.user?.value);
+  let userinfo = useSelector((state) => state?.user?.value);
   const auth = getAuth();
 
-  const storageRef = ref(storage, "profilePic/" + `${userInfo.uid}`);
+  const storageRef = ref(storage, "profilePic/" + `${userinfo.uid}`);
+  const storagegrpimgRef = ref(storage, "groupPic/" + `${userinfo.uid}`);
   const [image, setImage] = useState(defaultSrc);
   const [cropData, setCropData] = useState("#");
   const cropperRef = createRef();
@@ -57,21 +58,43 @@ function ImagesCropper() {
     if (typeof cropperRef.current?.cropper !== "undefined") {
       setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
     }
-    const message4 = cropperRef.current?.cropper.getCroppedCanvas().toDataURL();
-    uploadString(storageRef, message4, "data_url").then((snapshot) => {
-      getDownloadURL(storageRef).then((downloadURL) => {
-        console.log("File available at", downloadURL);
-        updateProfile(auth.currentUser, {
-          photoURL: downloadURL,
-        }).then(() => {
-          localStorage.setItem(
-            "user",
-            JSON.stringify({ ...userInfo, photoURL: downloadURL })
-          );
-          dispatch(activeUser({ ...userInfo, photoURL: downloadURL }));
+    if (profilepic) {
+      const message4 = cropperRef.current?.cropper
+        .getCroppedCanvas()
+        .toDataURL();
+      uploadString(storageRef, message4, "data_url").then((snapshot) => {
+        getDownloadURL(storageRef).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          updateProfile(auth.currentUser, {
+            photoURL: downloadURL,
+          }).then(() => {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({ ...userinfo, photoURL: downloadURL })
+            );
+            dispatch(activeUser({ ...userinfo, photoURL: downloadURL }));
+          });
         });
       });
-    });
+    } else {
+      const message4 = cropperRef.current?.cropper
+        .getCroppedCanvas()
+        .toDataURL();
+      uploadString(storagegrpimgRef, message4, "data_url").then((snapshot) => {
+        getDownloadURL(storagegrpimgRef).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          updateProfile(auth.currentUser, {
+            grpphotoURL: downloadURL,
+          }).then(() => {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({ ...userinfo, grphotoURL: downloadURL })
+            );
+            dispatch(activeUser({ ...userinfo, grpphotoURL: downloadURL }));
+          });
+        });
+      });
+    }
   };
 
   return (

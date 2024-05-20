@@ -81,6 +81,42 @@ function User() {
       rqstreceiverphotourl: item.userphoto,
     });
   };
+  const [sentfriendrqst, setSentFriendrqst] = useState([]);
+  useEffect(() => {
+    const sentrqstRef = ref(db, "friendrequest/");
+    onValue(sentrqstRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().rqstreceiverid + item.val().rqstsenderid);
+      });
+      setSentFriendrqst(arr);
+    });
+  }, []);
+
+  // showing when two person are friends
+  const [friendList, setFriendList] = useState([]);
+  useEffect(() => {
+    const friendRef = ref(db, "friends/");
+    onValue(friendRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().rqstreceiverid + item.val().rqstsenderid);
+      });
+      setFriendList(arr);
+    });
+  }, []);
+  // showing when two person are friends
+  const [blockList, setBlockList] = useState([]);
+  useEffect(() => {
+    const friendRef = ref(db, "blocklist/");
+    onValue(friendRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().blockeduserid + item.val().blockedbyid);
+      });
+      setBlockList(arr);
+    });
+  }, []);
 
   return (
     <div className="boxcontainer">
@@ -99,9 +135,28 @@ function User() {
           <div className="username">
             <h3>{item.username}</h3>
           </div>
-          <Button variant="contained" onClick={() => handleFriendRequest(item)}>
-            +
-          </Button>
+          {sentfriendrqst.includes(item.userid + userinfo.uid) ? (
+            <h4>Sent Friend Request</h4>
+          ) : sentfriendrqst.includes(userinfo.uid + item.userid) ? (
+            <Button variant="contained" disabled>
+              Accept
+            </Button>
+          ) : friendList.includes(item.userid + userinfo.uid) ? (
+            <h4>Friends</h4>
+          ) : friendList.includes(userinfo.uid + item.userid) ? (
+            <h4>Friends</h4>
+          ) : blockList.includes(item.userid + userinfo.uid) ? (
+            <h4>you blocked this id</h4>
+          ) : blockList.includes(userinfo.uid + item.userid) ? (
+            <h4>you blocked from this id</h4>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={() => handleFriendRequest(item)}
+            >
+              +
+            </Button>
+          )}
         </div>
       ))}
     </div>
