@@ -13,6 +13,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../Slices/userSlice";
 import ImagesCropper from "./ImagesCropper";
+import { FaPeopleGroup } from "react-icons/fa6";
 
 function Navbar() {
   // log out modal
@@ -66,92 +67,116 @@ function Navbar() {
 
   return (
     <div className="navbox">
-      <div className="userProfile">
-        <img
-          src={userinfo.photoURL}
-          className={"userImg"}
-          alt=""
-          onClick={handleOpenUserImg}
-        />
-        <h2 style={{ fontSize: "20px" }}>{userinfo.displayName}</h2>
-        <Modal
-          open={userImg}
-          onClose={handleCloseUserImg}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <ImagesCropper />
-          </Box>
-        </Modal>
-      </div>
-      <div className="navitem">
-        <Link
-          to={"/pages/home"}
-          className={`${
-            location.pathname == "/pages" || location.pathname == "/pages/home"
-              ? "active"
-              : null
-          } Navicon`}
-        >
-          <FaHome className="Navicon" />
-        </Link>
-        <Link
-          to={"/pages/massage"}
-          className={`${
-            location.pathname == "/pages/massage" ? "active" : null
-          } Navicon`}
-        >
-          {" "}
-          <FaMessage className="Navicon" />
-        </Link>
-        <Link
-          to={"/pages/notifications"}
-          className={`${
-            location.pathname == "/pages/notifications" ? "active" : null
-          } Navicon`}
-        >
-          <IoIosNotifications className="Navicon" />
-        </Link>
-        <Link
-          to={"/pages/settings"}
-          className={`${
-            location.pathname == "/pages/settings" ? "active" : null
-          } Navicon`}
-        >
-          <IoSettings className="Navicon" />
-        </Link>
-      </div>
-      <FaSignOutAlt className="Navicon" onClick={handleOpen} />
-
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Log Out !
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Are you sure to LOG OUT?
-          </Typography>
-          <div className="logbuttons">
-            <Button variant="contained" onClick={handleLogout}>
-              Log Out
-            </Button>
-
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => setOpen(false)}
+      <div className="navboxinner">
+        <div className="nav">
+          <div className="userProfile">
+            <img
+              src={userinfo.photoURL}
+              className={"userImg"}
+              alt=""
+              onClick={handleOpenUserImg}
+            />
+            <Link to={"/pages/Profile"} style={{ textDecoration: "none" }}>
+              <h2 style={{ fontSize: "20px" }}>{userinfo.displayName}</h2>
+            </Link>
+            <Modal
+              open={userImg}
+              onClose={handleCloseUserImg}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
             >
-              Cancle
-            </Button>
+              <Box sx={style}>
+                <ImagesCropper />
+              </Box>
+            </Modal>
           </div>
-        </Box>
-      </Modal>
+          <div className="navitem">
+            <Link to={"/pages/home"}>
+              <div
+                className={`${
+                  location.pathname == "/pages" ||
+                  location.pathname == "/pages/home"
+                    ? "active"
+                    : "Navicon"
+                } `}
+              >
+                <FaHome />
+              </div>
+            </Link>
+            <Link to={"/pages/Groups"}>
+              <div
+                className={`${
+                  location.pathname == "/pages/Groups" ? "active" : "Navicon"
+                } `}
+              >
+                <FaPeopleGroup />
+              </div>
+            </Link>
+            <Link to={"/pages/massage"}>
+              {" "}
+              <div
+                className={`${
+                  location.pathname == "/pages/massage" ? "active" : "Navicon"
+                } `}
+              >
+                <FaMessage />
+              </div>
+            </Link>
+            <Link to={"/pages/notifications"}>
+              <div
+                className={`${
+                  location.pathname == "/pages/notifications"
+                    ? "active"
+                    : "Navicon"
+                } `}
+              >
+                <IoIosNotifications />
+              </div>
+            </Link>
+            <Link to={"/pages/settings"}>
+              <div
+                className={`${
+                  location.pathname == "/pages/settings" ? "active" : "Navicon"
+                } `}
+              >
+                <IoSettings />
+              </div>
+            </Link>
+          </div>
+          <div className="Navicon">
+            <FaSignOutAlt onClick={handleOpen} />
+          </div>
+
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Log Out !
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Are you sure to LOG OUT?
+              </Typography>
+              <div className="logbuttons">
+                <Button variant="contained" onClick={handleLogout}>
+                  Log Out
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => setOpen(false)}
+                >
+                  Cancle
+                </Button>
+              </div>
+            </Box>
+          </Modal>
+        </div>
+      </div>
     </div>
   );
 }

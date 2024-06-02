@@ -22,7 +22,7 @@ function Friends() {
       let arr = [];
       snapshot.forEach((item) => {
         if (
-          item.val().rqstsenderid == userinfo.ui ||
+          item.val().rqstsenderid == userinfo.uid ||
           item.val().rqstreceiverid == userinfo.uid
         ) {
           arr.push({ ...item.val(), friendsid: item.key });
@@ -33,15 +33,29 @@ function Friends() {
   }, []);
   // block from friend List
   const handleBlock = (item) => {
-    set(push(ref(db, "blocklist/")), {
-      blockeduserid: item.rqstsenderid,
-      blockedusername: item.rqstsendername,
-      blockeduserphoto: item.rqstsenderphoto,
-      blockedbyid: item.rqstreceiverid,
-      blockedbyname: item.rqstreceivername,
-    }).then(() => {
-      remove(ref(db, "friends/" + item.friendsid));
-    });
+    if (userinfo.uid == item.rqstsenderid) {
+      set(push(ref(db, "blocklist/")), {
+        blockeduserid: item.rqstreceiverid,
+        blockedusername: item.rqstreceivername,
+        blockeduserphoto: item.rqstreceiverphotourl,
+        blockedbyuserphoto: userinfo.photoURL,
+        blockedbyid: userinfo.uid,
+        blockedbyname: userinfo.displayName,
+      }).then(() => {
+        remove(ref(db, "friends/" + item.friendsid));
+      });
+    } else if (userinfo.uid == item.rqstreceiverid) {
+      set(push(ref(db, "blocklist/")), {
+        blockeduserid: item.rqstsenderid,
+        blockedusername: item.rqstsendername,
+        blockeduserphoto: item.rqstsenderphoto,
+        blockedbyuserphoto: userinfo.photoURL,
+        blockedbyid: userinfo.uid,
+        blockedbyname: userinfo.displayName,
+      }).then(() => {
+        remove(ref(db, "friends/" + item.friendsid));
+      });
+    }
   };
   return (
     <div className="boxcontainer">
@@ -52,17 +66,21 @@ function Friends() {
         <div className="boxinner" key={index}>
           <div className="userimg">
             <img
-              src={item.rqstsenderphoto}
+              src={
+                userinfo.uid == item.rqstreceiverid
+                  ? item.rqstsenderphoto
+                  : item.rqstreceiverphotourl
+              }
               alt=""
               style={{ width: "100%", borderRadius: "50%" }}
             />
           </div>
           <div className="username">
-            {item.rqstsenderid ? (
-              <h3>{item.rqstsendername}</h3>
-            ) : (
-              <h3>{item.rqstreceivername}</h3>
-            )}
+            <h3>
+              {userinfo.uid == item.rqstreceiverid
+                ? item.rqstsendername
+                : item.rqstreceivername}
+            </h3>
           </div>
           <Button
             variant="contained"

@@ -42,32 +42,58 @@
   position: absolute !important;
 }
 .navbox {
-  border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100vh;
   justify-content: space-around;
-  background: #5f35f5;
+}
+.navboxinner {
+  height: 99%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255.5);
+  box-shadow: 0 0 10px #fff inset;
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+}
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: space-around;
 }
 .navitem {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  height: 350px;
+  height: 400px;
 }
 .active {
   background: #fff;
-  width: 110px;
   height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  color: #5f35f5;
+  color: rgb(229 222 140) !important;
   position: relative;
+  font-size: 40px;
+  animation: widthfill 0.8s forwards;
+  width: 0;
+  right: 0;
+}
+@keyframes widthfill {
+  100% {
+    right: 0;
+    width: 110px;
+  }
 }
 .active::after {
   position: absolute;
@@ -76,7 +102,7 @@
   height: 70px;
   top: 0;
   right: -6px;
-  background: #5f35f5;
+  background: #af7070;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
@@ -90,9 +116,14 @@
   cursor: pointer;
 }
 .Navicon {
-  font-size: 40px;
   cursor: pointer;
-  color: #bad1ff;
+  color: #af7070;
+  width: 110px;
+  height: 70px;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .logbuttons {
   display: flex;
@@ -135,12 +166,19 @@
   border-radius: 5px;
   padding: 15px;
   overflow-y: scroll;
+  box-shadow: 0 0 10px #fff inset;
+  border: 2px solid rgba(255, 255, 255.5);
 }
 .tittlebar {
   margin-bottom: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 2px solid rgba(255, 255, 255.5);
+  box-shadow: 0 0 10px #fff inset;
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: #975151;
 }
 .userimg {
   width: 80px;
@@ -181,8 +219,56 @@
   width: 60.7%;
   top: 0;
   right: 15px;
-  background: #f5f4f4;
-  z-index: 4;
-  padding: 20px;
-  display: inline-block;
+  background: #d3cc7f;
+  z-index: 3;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255.5);
+  box-shadow: 0 0 10px #fff inset;
+  border-radius: 4px;
+}
+.showuserBox {
+  overflow-y: scroll;
+  height: 600px;
+}
+.typedinner {
+  height: 600px;
+  display: flex;
+  align-items: center;
+}
+.imgdiv {
+  position: relative;
+}
+.imgdiv .imgdown {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+.imgdiv .imgup {
+  position: absolute;
+  width: 72%;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.regimg {
+  position: absolute;
+  bottom: -229px;
+  right: 0;
+  width: 400px;
+  z-index: -1;
+}
+.regimg2 {
+  position: absolute;
+  bottom: -229px;
+  left: 0;
+  width: 400px;
+  z-index: -1;
+}
+.groupsdiv {
+  display: flex;
+  flex-direction: column;
+  row-gap: 11px;
 }

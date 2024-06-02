@@ -51,11 +51,23 @@ function GroupsList() {
       setpendding(arr);
     });
   }, []);
+  // showing join request is accept
+  const [joinedList, setJoinedList] = useState([]);
+  useEffect(() => {
+    const joinedRef = ref(db, "memberlist/");
+    onValue(joinedRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().grplistid + item.val().whosendrequestid);
+      });
+      setJoinedList(arr);
+    });
+  }, []);
 
   return (
     <div className="boxcontainer relative">
       <div className="tittlebar">
-        <h2>My Groups List</h2>
+        <h2>Groups List</h2>
       </div>
 
       {mygrplist.map((item, index) => (
@@ -69,20 +81,23 @@ function GroupsList() {
           </div>
           <div>
             <div className="username">
-              <h4>{item.grpname}</h4>
+              <h2>{item.grpname}</h2>
             </div>
             <div className="username">
-              <h5>{item.grptag}</h5>
+              <h3>{item.grptag}</h3>
             </div>
             <div className="username">
-              <h5>Admin Name:{item.adminname}</h5>
+              <h3>Admin Name: {item.adminname}</h3>
             </div>
           </div>
           <div className="grpbtns">
-            {penddinglist.includes(item.grplistid + userinfo.uid) ||
-            penddinglist.includes(userinfo.uid + item.grplistid) ? (
+            {penddinglist.includes(item.mygrpid + userinfo.uid) ? (
               <>
-                <p>Join Request Sent</p>
+                <p style={{ fontWeight: "bold" }}>Join Request Sent</p>
+              </>
+            ) : joinedList.includes(item.mygrpid + userinfo.uid) ? (
+              <>
+                <p style={{ fontWeight: "bold" }}>You are Joined</p>
               </>
             ) : (
               <Button

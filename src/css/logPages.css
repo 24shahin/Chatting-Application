@@ -263,6 +263,7 @@
 .signUpInputInner {
   text-align: center;
   padding: 55px;
+  position: relative;
 }
 .signUpInputInner button {
   padding: 10px 30px;
@@ -290,6 +291,7 @@
 .signInInputInner {
   text-align: center;
   padding: 55px;
+  position: relative;
 }
 .signInInputInner button {
   padding: 10px 30px;

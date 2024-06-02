@@ -133,7 +133,57 @@ function MyGroups() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  // accept group request
+  const handlegrprqstAccept = (item) => {
+    console.log(item);
+    set(push(ref(db, "memberlist/")), {
+      ...item,
+    }).then(() => {
+      remove(ref(db, "grouprequest/" + item.grprqstid));
+    });
+  };
+  // delet group request
+  const handlegrprqstCancle = (item) => {
+    remove(ref(db, "grouprequest/" + item.grprqstid));
+  };
+  // member show
+  const [groupmemList, setGroupMemList] = useState([]);
+  const [openmem, setOpenmem] = useState(false);
+  const handleModalmemClose = () => setOpenmem(false);
+  const handleModalmemOpen = (item) => {
+    setOpenmem(true);
 
+    const memberRef = ref(db, "memberlist/");
+    onValue(memberRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((info) => {
+        if (item.mygrpid == info.val().grplistid) {
+          arr.push({ ...info.val(), memberid: info.key });
+        }
+      });
+      setGroupMemList(arr);
+    });
+  };
+  // member delet
+  const handlememberDelet = (item) => {
+    remove(ref(db, "memberlist/" + item.memberid));
+  };
+  // invite user to join group
+  const [inviteList, setInviteList] = useState([]);
+  const [openInvite, setOpenInvite] = useState(false);
+  const handleModalinviteClose = () => setOpenInvite(false);
+  const handleModalinviteOpen = (item) => {
+    setOpenInvite(true);
+
+    const memberRef = ref(db, "users/");
+    onValue(memberRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push({ ...item.val() });
+      });
+      setInviteList(arr);
+    });
+  };
   return (
     <div className="boxcontainer relative">
       <div className="tittlebar">
@@ -210,13 +260,13 @@ function MyGroups() {
           </div>
           <div>
             <div className="username">
-              <h4>{item.grpname}</h4>
+              <h2>{item.grpname}</h2>
             </div>
             <div className="username">
-              <h5>{item.grptag}</h5>
+              <h3>{item.grptag}</h3>
             </div>
             <div className="username">
-              <h5>Admin Name:{item.adminname}</h5>
+              <h3>Admin Name:{item.adminname}</h3>
             </div>
           </div>
           <div className="grpbtns">
@@ -234,7 +284,7 @@ function MyGroups() {
             >
               <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Text in a modal
+                  Your Group Request to Join
                 </Typography>
                 {groupjoinList.map((item, index) => (
                   <List
@@ -264,17 +314,24 @@ function MyGroups() {
                             >
                               {item.whosendrequestname}
                             </Typography>
-                            {`${item.whosendrequestname} ---Wants to join ${item.grpname}`}
+                            {`---Wants to join ${item.grpname}`}
                           </React.Fragment>
                         }
                       />
                     </ListItem>
                     <div style={{ textAlign: "center" }}>
-                      <Button variant="contained"> accept</Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => handlegrprqstAccept(item)}
+                      >
+                        {" "}
+                        accept
+                      </Button>
                       <Button
                         variant="contained"
                         color="error"
                         style={{ marginLeft: "15px" }}
+                        onClick={() => handlegrprqstCancle(item)}
                       >
                         {" "}
                         delet
@@ -286,9 +343,71 @@ function MyGroups() {
                 ))}
               </Box>
             </Modal>
-            <Button variant="contained" style={{ marginLeft: "10px" }}>
+            <Button
+              variant="contained"
+              style={{ marginLeft: "10px" }}
+              onClick={() => handleModalmemOpen(item)}
+            >
               Members
             </Button>
+            <Modal
+              open={openmem}
+              onClose={handleModalmemClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Members, You had accepted
+                </Typography>
+                {groupmemList.map((item, index) => (
+                  <List
+                    sx={{
+                      width: "100%",
+                      maxWidth: 360,
+                      bgcolor: "background.paper",
+                    }}
+                    key={index}
+                  >
+                    <ListItem alignItems="flex-start">
+                      <ListItemAvatar>
+                        <Avatar
+                          alt="Remy Sharp"
+                          src={item.whosendrequestphoto}
+                        />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={item.whosendrequestname}
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: "inline" }}
+                              component="span"
+                              variant="body2"
+                              color="text.primary"
+                            >
+                              {item.whosendrequestname}
+                            </Typography>
+                            {`---is a member of ${item.grpname}`}
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                    <div style={{ textAlign: "center" }}>
+                      <Button
+                        variant="contained"
+                        onClick={() => handlememberDelet(item)}
+                      >
+                        {" "}
+                        delet membership
+                      </Button>
+                    </div>
+                    <br />
+                    <Divider variant="inset" component="li" />
+                  </List>
+                ))}
+              </Box>
+            </Modal>
           </div>
           <div ref={menuRefs.current[index]}>
             <HiDotsVertical
@@ -297,7 +416,12 @@ function MyGroups() {
             />
             {optionOpen === item.mygrpid && (
               <div className="optionBox">
-                <Button variant="contained">Invite</Button>
+                <Button
+                  variant="contained"
+                  onClick={() => handleModalinviteOpen(item)}
+                >
+                  Invite
+                </Button>
                 <Button
                   variant="contained"
                   style={{ marginLeft: "15px" }}
@@ -309,6 +433,55 @@ function MyGroups() {
               </div>
             )}
           </div>
+          <Modal
+            open={openInvite}
+            onClose={handleModalinviteClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <div className="showuserBox">
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  User where you can invite
+                </Typography>
+                {inviteList.map((item, index) => (
+                  <List
+                    sx={{
+                      width: "100%",
+                      maxWidth: 360,
+                      bgcolor: "background.paper",
+                    }}
+                    key={index}
+                  >
+                    <ListItem alignItems="flex-start">
+                      <ListItemAvatar>
+                        <Avatar alt="Remy Sharp" src={item.photoURL} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={item.username}
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: "inline" }}
+                              component="span"
+                              variant="body2"
+                              color="text.primary"
+                            ></Typography>
+                            {`Invite to join This Group`}
+                          </React.Fragment>
+                        }
+                      />
+                      <Button variant="contained" color="success">
+                        {" "}
+                        invite
+                      </Button>
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                  </List>
+                ))}
+              </div>
+            </Box>
+          </Modal>
         </div>
       ))}
     </div>

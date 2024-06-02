@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../css/logPages.css";
 import Registration from "../components/Registration";
 import Login from "../components/Login";
+import Hi from "../assets/hi33.gif";
+import Hi2 from "../assets/hi2.png";
 
 function LogPages() {
   const [moved, setMoved] = useState(false);
@@ -60,6 +62,7 @@ function LogPages() {
                         Enter your personal details to use all of site features
                       </p>
                       <button onClick={handleMove}>signIn</button>
+                      <img src={Hi2} alt="" className="regimg2" />
                     </div>
                   </div>
                   <div
@@ -97,6 +100,7 @@ function LogPages() {
                         features
                       </p>
                       <button onClick={handleMove}>signUp</button>
+                      <img src={Hi} alt="" className="regimg" />
                     </div>
                   </div>
                 </div>

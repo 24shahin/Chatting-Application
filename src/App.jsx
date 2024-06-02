@@ -12,6 +12,8 @@ import Pages from "./Pages/Pages";
 import LogPages from "./Pages/LogPages";
 import Home from "./Pages/Home";
 import Notifiactions from "./Pages/Notifiactions";
+import BothGroups from "./Pages/BothGroups";
+import Profile from "./Pages/Profile";
 
 function App() {
   const router = createBrowserRouter(
@@ -21,9 +23,11 @@ function App() {
         <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
         <Route path="/pages" element={<Pages />}>
           <Route path="home" element={<Home />}></Route>
+          <Route path="Groups" element={<BothGroups />}></Route>
           <Route path="massage" element={<Massage />}></Route>
           <Route path="notifications" element={<Notifiactions />}></Route>
           <Route path="settings" element={<Setting />}></Route>
+          <Route path="Profile" element={<Profile />}></Route>
         </Route>
       </>
     )

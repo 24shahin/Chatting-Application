@@ -14,8 +14,8 @@ function User() {
   const auth = getAuth();
   const db = getDatabase();
   const storage = getStorage();
-  const [userList, setUserList] = useState([]);
   // showing user
+  const [userList, setUserList] = useState([]);
   useEffect(() => {
     const userRef = ref(db, "users/");
     onValue(userRef, async (snapshot) => {
@@ -105,7 +105,7 @@ function User() {
       setFriendList(arr);
     });
   }, []);
-  // showing when two person are friends
+  // showing when you are blocked some friends
   const [blockList, setBlockList] = useState([]);
   useEffect(() => {
     const friendRef = ref(db, "blocklist/");
@@ -154,7 +154,7 @@ function User() {
               variant="contained"
               onClick={() => handleFriendRequest(item)}
             >
-              +
+              Add Friend
             </Button>
           )}
         </div>

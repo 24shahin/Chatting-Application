@@ -1,7 +1,7 @@
 import React from "react";
 
 function Notifiactions() {
-  return <div>Notifiactions</div>;
+  return <div>On Working this Component</div>;
 }
 
 export default Notifiactions;
