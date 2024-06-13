@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../Slices/userSlice";
 import ImagesCropper from "./ImagesCropper";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { chatwithperson } from "../Slices/chatwithperson";
 
 function Navbar() {
   // log out modal
@@ -58,6 +59,8 @@ function Navbar() {
         });
         localStorage.removeItem("user");
         dispatch(activeUser(null));
+        localStorage.removeItem("chatperson");
+        dispatch(chatwithperson(null));
         Navigate("/");
       })
       .catch((error) => {
@@ -86,7 +89,7 @@ function Navbar() {
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
-                <ImagesCropper />
+                <ImagesCropper profilepic={true} />
               </Box>
             </Modal>
           </div>

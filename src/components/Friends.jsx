@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import Userpic from "../assets/user.png";
+
 import {
   getDatabase,
   ref,
@@ -9,11 +9,16 @@ import {
   push,
   remove,
 } from "firebase/database";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { chatwithperson } from "../Slices/chatwithperson";
+import { useNavigate } from "react-router-dom";
 
 function Friends() {
+  const dispatch = useDispatch();
   const userinfo = useSelector((state) => state?.user?.value);
+  const chatfriend = useSelector((state) => state?.user?.value);
   const db = getDatabase();
+  const Navigate = useNavigate();
   // showing who are user's friends
   const [friendList, setFriendList] = useState([]);
   useEffect(() => {
@@ -57,6 +62,42 @@ function Friends() {
       });
     }
   };
+  // chat site
+  const handlechat = (item) => {
+    if (userinfo.uid == item.rqstreceiverid) {
+      localStorage.setItem(
+        "chatperson",
+        JSON.stringify({
+          chatwithpersonid: item.rqstsenderid,
+          chatwithpersonname: item.rqstsendername,
+        })
+      );
+      Navigate("/pages/massage");
+      dispatch(
+        chatwithperson({
+          chatwithpersonid: item.rqstsenderid,
+          chatwithpersonname: item.rqstsendername,
+        })
+      );
+    } else {
+      localStorage.setItem(
+        "chatperson",
+        JSON.stringify({
+          chatwithpersonid: item.rqstsenderid,
+          chatwithpersonname: item.rqstsendername,
+        })
+      );
+
+      Navigate("/pages/massage");
+      dispatch(
+        chatwithperson({
+          chatwithpersonid: item.rqstreceiverid,
+          chatwithpersonname: item.rqstreceivername,
+        })
+      );
+    }
+   
+  };
   return (
     <div className="boxcontainer">
       <div className="tittlebar">
@@ -75,12 +116,12 @@ function Friends() {
               style={{ width: "100%", borderRadius: "50%" }}
             />
           </div>
-          <div className="username">
-            <h3>
-              {userinfo.uid == item.rqstreceiverid
-                ? item.rqstsendername
-                : item.rqstreceivername}
-            </h3>
+          <div className="username" style={{ cursor: "pointer" }}>
+            {userinfo.uid == item.rqstreceiverid ? (
+              <h3 onClick={() => handlechat(item)}>{item.rqstsendername}</h3>
+            ) : (
+              <h3 onClick={() => handlechat(item)}>{item.rqstreceivername}</h3>
+            )}
           </div>
           <Button
             variant="contained"

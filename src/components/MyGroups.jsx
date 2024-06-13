@@ -34,13 +34,18 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
+const defaultGroupImage = "https://path-to-your-default-group-image.jpg";
 function MyGroups() {
   const db = getDatabase();
   const userinfo = useSelector((state) => state?.user?.value);
   const [open, setOpen] = useState(false);
+  const [currentGroupId, setCurrentGroupId] = useState(null); // Track current group for image update
   const handleModalClose = () => setOpen(false);
-  const handleModalOpen = () => setOpen(true);
+  const handleModalOpen = (groupId) => {
+    console.log(groupId);
+    setCurrentGroupId(groupId);
+    setOpen(true);
+  };
 
   // group request show
   const [groupjoinList, setGroupjoinList] = useState([]);
@@ -101,6 +106,8 @@ function MyGroups() {
       grptag: createGroupInput.grptag,
       adminname: userinfo.displayName,
       adminid: userinfo.uid,
+      grpphotoURL:
+        "https://firebasestorage.googleapis.com/v0/b/chatting-application-b6c69.appspot.com/o/avatar%2Favatar.jpg?alt=media&token=133ca0e4-fa6d-4881-ac34-27d9956bb3fe",
     }).then(() => {
       setCreateGroupButtonShow(false);
     });
@@ -184,6 +191,10 @@ function MyGroups() {
       setInviteList(arr);
     });
   };
+  // const handleImageSave = (url, groupId) => {
+  //   set(ref(db, `grouplist/${groupId}/grpphotoURL`), url);
+  // };
+  
   return (
     <div className="boxcontainer relative">
       <div className="tittlebar">
@@ -242,10 +253,10 @@ function MyGroups() {
         <div className="boxinner relative" key={index}>
           <div className="userimg">
             <img
-              src={userinfo.grpphotoURL}
+              src={item.grpphotoURL || defaultGroupImage} // Use default image if no group image is available
               alt=""
               style={{ width: "80px", height: "80px", borderRadius: "50%" }}
-              onClick={handleModalOpen}
+              onClick={() => handleModalOpen(item.mygrpid)}
             />
             <Modal
               open={open}
@@ -254,7 +265,11 @@ function MyGroups() {
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
-                <ImagesCropper profilepic={false} />
+                <ImagesCropper
+                  profilepic={false}
+                  // onSave={(url) => handleImageSave(url, item.mygrpid)}
+                  groupId={currentGroupId}
+                />
               </Box>
             </Modal>
           </div>

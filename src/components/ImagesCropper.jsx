@@ -1,4 +1,4 @@
-import React, { useState, createRef } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import Button from "@mui/material/Button";
@@ -13,6 +13,7 @@ import { activeUser } from "../Slices/userSlice";
 import { getAuth, updateProfile } from "firebase/auth";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { getDatabase, update } from "firebase/database"; // Import update from Firebase database
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -25,20 +26,31 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 
-function ImagesCropper({ profilepic }) {
-  let dispatch = useDispatch();
+function ImagesCropper({ profilepic, groupId }) {
+  const dispatch = useDispatch();
   const storage = getStorage();
-  let userinfo = useSelector((state) => state?.user?.value);
+  const userinfo = useSelector((state) => state?.user?.value);
   const auth = getAuth();
+  const db = getDatabase(); // Initialize the database
 
-  const storageRef = ref(storage, "profilePic/" + `${userinfo.uid}`);
-  const storagegrpimgRef = ref(storage, "groupPic/" + `${userinfo.uid}`);
   const [image, setImage] = useState(defaultSrc);
   const [cropData, setCropData] = useState("#");
   const cropperRef = createRef();
+
+  // Define storage references inside useEffect to update when groupId changes
+  const storageRef = ref(storage, `profilePic/${userinfo.uid}`);
+  const storagegrpimgRef = ref(storage, `groupPic/${groupId}`);
+
+  useEffect(() => {
+    // Reset image and cropData when groupId changes
+    setImage(defaultSrc);
+    setCropData("#");
+  }, [groupId]);
+
   const onChange = (e) => {
     e.preventDefault();
     let files;
@@ -58,10 +70,10 @@ function ImagesCropper({ profilepic }) {
     if (typeof cropperRef.current?.cropper !== "undefined") {
       setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
     }
+    const message4 = cropperRef.current?.cropper
+      .getCroppedCanvas()
+      .toDataURL();
     if (profilepic) {
-      const message4 = cropperRef.current?.cropper
-        .getCroppedCanvas()
-        .toDataURL();
       uploadString(storageRef, message4, "data_url").then((snapshot) => {
         getDownloadURL(storageRef).then((downloadURL) => {
           console.log("File available at", downloadURL);
@@ -77,20 +89,12 @@ function ImagesCropper({ profilepic }) {
         });
       });
     } else {
-      const message4 = cropperRef.current?.cropper
-        .getCroppedCanvas()
-        .toDataURL();
       uploadString(storagegrpimgRef, message4, "data_url").then((snapshot) => {
         getDownloadURL(storagegrpimgRef).then((downloadURL) => {
           console.log("File available at", downloadURL);
-          updateProfile(auth.currentUser, {
+          // Update group image URL in Firebase database
+          update(ref(db, `grouplist/${groupId}`), {
             grpphotoURL: downloadURL,
-          }).then(() => {
-            localStorage.setItem(
-              "user",
-              JSON.stringify({ ...userinfo, grphotoURL: downloadURL })
-            );
-            dispatch(activeUser({ ...userinfo, grpphotoURL: downloadURL }));
           });
         });
       });
@@ -100,7 +104,7 @@ function ImagesCropper({ profilepic }) {
   return (
     <div>
       <div style={{ width: "100%" }}>
-        <h3>Profile Photo Upload</h3>
+        <h3>Photo Upload</h3>
         <br />
         <div className="box" style={{ width: "50%" }}>
           <h1>Preview</h1>
