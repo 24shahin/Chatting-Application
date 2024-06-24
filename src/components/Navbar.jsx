@@ -103,7 +103,7 @@ function Navbar() {
                     : "Navicon"
                 } `}
               >
-                <FaHome />
+                <FaHome className={'Naviconpos'}/>
               </div>
             </Link>
             <Link to={"/pages/Groups"}>
@@ -112,7 +112,7 @@ function Navbar() {
                   location.pathname == "/pages/Groups" ? "active" : "Navicon"
                 } `}
               >
-                <FaPeopleGroup />
+                <FaPeopleGroup className={'Naviconpos'}/>
               </div>
             </Link>
             <Link to={"/pages/massage"}>
@@ -122,7 +122,7 @@ function Navbar() {
                   location.pathname == "/pages/massage" ? "active" : "Navicon"
                 } `}
               >
-                <FaMessage />
+                <FaMessage className={'Naviconpos'}/>
               </div>
             </Link>
             <Link to={"/pages/notifications"}>
@@ -133,7 +133,7 @@ function Navbar() {
                     : "Navicon"
                 } `}
               >
-                <IoIosNotifications />
+                <IoIosNotifications className={'Naviconpos'}/>
               </div>
             </Link>
             <Link to={"/pages/settings"}>
@@ -142,7 +142,7 @@ function Navbar() {
                   location.pathname == "/pages/settings" ? "active" : "Navicon"
                 } `}
               >
-                <IoSettings />
+                <IoSettings className={'Naviconpos'}/>
               </div>
             </Link>
           </div>

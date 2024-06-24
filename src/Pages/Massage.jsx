@@ -16,7 +16,6 @@ import {
 } from "firebase/database";
 import moment from "moment";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
 const style = {
@@ -33,11 +32,15 @@ const style = {
 
 function Massage() {
   const [sendmsg, setSendmsg] = useState("");
+  const [sendgrpmsg, setSendgrpmsg] = useState("");
   const [sentmsg, setSentmsg] = useState("");
   const [showmsg, setShowmsg] = useState([]);
+  const [showgrpmsg, setShowgrpmsg] = useState([]);
+
   const userinfo = useSelector((state) => state?.user?.value);
   const db = getDatabase();
   const chatfriend = useSelector((state) => state?.chatwithperson?.value);
+  const groupchat = useSelector((state) => state?.groupchat?.value);
 
   // send msg
   const handlesendmsg = () => {
@@ -54,7 +57,22 @@ function Massage() {
       setSendmsg("");
     });
   };
-  // showing msg
+  // send grp msg
+  const handlesendgrpmsg = () => {
+    set(push(ref(db, "groupmassage/")), {
+      sendperson: userinfo.displayName,
+      sendpersonid: userinfo.uid,
+      getpersonname: groupchat.groupname,
+      getpersonid: groupchat.groupid,
+      msg: sendgrpmsg,
+      date: `${new Date().getFullYear()}/${
+        new Date().getMonth() + 1
+      }/${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+    }).then(() => {
+      setSendgrpmsg("");
+    });
+  };
+  // showing person msg
   useEffect(() => {
     const msgRef = ref(db, "massage/");
     onValue(msgRef, (snapshot) => {
@@ -72,6 +90,24 @@ function Massage() {
       setShowmsg(arr);
     });
   }, [chatfriend.chatwithpersonid, userinfo.uid, db]);
+  // showing group msg
+  useEffect(() => {
+    const msgRef = ref(db, "groupmassage/");
+    onValue(msgRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        if (
+          (item.val().sendpersonid === userinfo.uid &&
+            item.val().getpersonid === groupchat.groupid) ||
+          (item.val().getpersonid === userinfo.uid &&
+            item.val().sendpersonid === groupchat.groupid)
+        ) {
+          arr.push({ ...item.val(), msgid: item.key });
+        }
+      });
+      setShowgrpmsg(arr);
+    });
+  }, [groupchat.groupid, userinfo.uid, db]);
 
   const [selectedmsgId, setSelectedmsgId] = useState(null);
   const handlemsgbtn = (msgid) => {
@@ -125,7 +161,7 @@ function Massage() {
         sendpersonid: userinfo.uid,
         getpersonname: item.rqstreceivername,
         getpersonid: item.rqstreceiverid,
-        msg: sentmsg,
+        msg: sendmsg,
         date: `${new Date().getFullYear()}/${
           new Date().getMonth() + 1
         }/${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
@@ -196,7 +232,9 @@ function Massage() {
           <Grid item xs={6} style={{ height: "100vh" }}>
             <div className="boxcontainermsg ">
               <div className="msgheader">
-                <h2>{chatfriend?.chatwithpersonname}</h2>
+                <h2>
+                  {chatfriend?.chatwithpersonname || groupchat?.groupname}
+                </h2>
               </div>
               <div className="textmsg">
                 {showmsg.map((item, index) =>

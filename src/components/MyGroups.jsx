@@ -181,20 +181,42 @@ function MyGroups() {
   const handleModalinviteClose = () => setOpenInvite(false);
   const handleModalinviteOpen = (item) => {
     setOpenInvite(true);
-
     const memberRef = ref(db, "users/");
     onValue(memberRef, (snapshot) => {
       let arr = [];
-      snapshot.forEach((item) => {
-        arr.push({ ...item.val() });
+      snapshot.forEach((info) => {
+        if (userinfo.uid !== info.key) {
+          arr.push({
+            ...info.val(),
+            grpmemid: info.key,
+            grpid: item.mygrpid,
+            groupname: item.grpname,
+            grptag: item.grptag,
+          });
+        }
       });
       setInviteList(arr);
     });
   };
+  const handleInvite = (item) => {
+    set(push(ref(db, "grpinvite/")), {
+      groupname: item.groupname,
+      grpid: item.grpid,
+      grptag: item.grptag,
+      adminname: userinfo.displayName,
+      adminid: userinfo.uid,
+      adminphotoURL: userinfo.photoURL,
+      whominviteid: item.grpmemid,
+      inviteename: item.username,
+      inviteephotoURL: item.photoURL,
+    });
+    console.log(item);
+  };
+  //
   // const handleImageSave = (url, groupId) => {
   //   set(ref(db, `grouplist/${groupId}/grpphotoURL`), url);
   // };
-  
+
   return (
     <div className="boxcontainer relative">
       <div className="tittlebar">
@@ -486,7 +508,11 @@ function MyGroups() {
                           </React.Fragment>
                         }
                       />
-                      <Button variant="contained" color="success">
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => handleInvite(item)}
+                      >
                         {" "}
                         invite
                       </Button>

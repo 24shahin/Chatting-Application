@@ -54,11 +54,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
   border: 2px solid rgba(255, 255, 255.5);
-  box-shadow: 0 0 10px #fff inset;
+  box-shadow: 0 0 10px #d4d4d4 inset;
   border-radius: 20px;
-  backdrop-filter: blur(20px);
 }
 .nav {
   display: flex;
@@ -75,36 +73,54 @@
   height: 400px;
 }
 .active {
-  background: #fff;
   height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  color: rgb(229 222 140) !important;
+  color: rgb(171 169 154) !important;
   position: relative;
   font-size: 40px;
-  animation: widthfill 0.8s forwards;
-  width: 0;
-  right: 0;
+  width: 110px;
+  right: 0 !important;
 }
-@keyframes widthfill {
-  100% {
-    right: 0;
+.active::before {
+  position: absolute;
+  content: "";
+  width: 0px;
+  height: 70px;
+  top: 0;
+  right: 0px;
+  background: #f3f3f3;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  animation: beforefill .8s forwards;
+}
+@keyframes beforefill{
+  0%{
+    width: 0;
+  }100%{
     width: 110px;
-  }
-}
+  }}
 .active::after {
   position: absolute;
   content: "";
-  width: 10px;
+  width: 0px;
   height: 70px;
   top: 0;
-  right: -6px;
-  background: #af7070;
+  right: 0px;
+  background: #d3d3d3;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+  animation: afterfill .8s forwards;
+}
+@keyframes afterfill{
+  0%{
+    width: 0;
+  }100%{
+    width: 10px;
+  }
 }
 .userProfile {
   text-align: center;
@@ -115,15 +131,20 @@
   border-radius: 50%;
   cursor: pointer;
 }
+.Naviconpos{
+  position: relative;
+  z-index: 4;
+}
 .Navicon {
   cursor: pointer;
-  color: #af7070;
+  color: rgb(129 125 125) !important;
   width: 110px;
   height: 70px;
   font-size: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 .logbuttons {
   display: flex;
@@ -166,7 +187,7 @@
   border-radius: 5px;
   padding: 15px;
   overflow-y: scroll;
-  box-shadow: 0 0 10px #fff inset;
+  box-shadow: 0 0 10px #d4d4d4 inset;
 }
 
 .tittlebar h2 {
@@ -174,8 +195,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 2px solid rgba(255, 255, 255.5);
-  box-shadow: 0 0 10px #fff inset;
+  border: 2px solid rgb(219, 219, 219) inset;
+  box-shadow: 2px -2px 4px #d4d4d4 inset;
   padding: 5px 10px;
   border-radius: 4px;
   color: #975151;
@@ -225,7 +246,7 @@
   display: flex;
   justify-content: center;
   border: 2px solid rgba(255, 255, 255.5);
-  box-shadow: 0 0 10px #fff inset;
+  box-shadow: 0 0 10px #d4d4d4 inset;
   border-radius: 4px;
 }
 .showuserBox {
@@ -245,6 +266,13 @@
   width: 100%;
   bottom: 0;
   left: 0;
+}
+.userimg2 {
+  width: 33.3%;
+}
+.grpbtns {
+  width: 33.3%;
+  text-align: end;
 }
 .imgdiv .imgup {
   position: absolute;
@@ -276,7 +304,7 @@
   height: 99.5%;
   position: relative;
   border: 2px solid rgba(255, 255, 255.5);
-  box-shadow: 0 0 10px #fff inset;
+  box-shadow: 0 0 10px #d4d4d4 inset;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -289,7 +317,6 @@
   margin-top: 20px;
 }
 .msgheader {
-  background-color: rgb(229 222 140) !important;
   padding: 15px 15px 0;
   box-shadow: 10px 10px 10px -10px #fff inset;
   top: 0;
@@ -297,10 +324,9 @@
   height: 8%;
 }
 .msgheader h2 {
-  background-color: rgb(229 222 140) !important;
   padding: 15px;
   border: 2px solid rgba(255, 255, 255.5);
-  box-shadow: 0 0 10px #fff inset;
+  box-shadow: 0 0 10px #d4d4d4 inset;
   border-radius: 4px;
   color: #975151;
 }
@@ -312,14 +338,12 @@
   z-index: 5;
   padding: 15px;
   height: 10%;
-  background-color: rgb(229 222 140) !important;
-  box-shadow: inset 10px -10px 10px -10px #fff;
+  box-shadow: 10px -10px 10px -10px #d4d4d4 inset;
 }
 .writeInput .inn {
-  background-color: rgb(229 222 140) !important;
   padding: 15px;
   border: 2px solid rgba(255, 255, 255.5);
-  box-shadow: 0 0 10px #fff inset;
+  box-shadow: 10px -10px 10px -10px #d4d4d4 inset;
   border-radius: 4px;
   width: 100%;
   display: flex;

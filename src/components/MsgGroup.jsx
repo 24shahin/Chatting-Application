@@ -9,10 +9,15 @@ import {
   push,
   remove,
 } from "firebase/database";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {groupchat} from "../Slices/groupchat";
+import {chatwithperson} from "../Slices/chatwithperson";
 
 function MsgGroup() {
   const db = getDatabase();
+  let dispatch = useDispatch()
+  let navigate = useNavigate()
   let userinfo = useSelector((state) => state?.user?.value);
   const [mygrplist, setMyGrpList] = useState([]);
   useEffect(() => {
@@ -20,57 +25,54 @@ function MsgGroup() {
     onValue(mygrpRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (userinfo.uid != item.val().adminid) {
+        if (userinfo.uid == item.val().adminid) {
           arr.push({ ...item.val(), mygrpid: item.key });
         }
       });
       setMyGrpList(arr);
     });
   }, []);
-  const handleJoingrp = (item) => {
-    set(push(ref(db, "grouprequest/")), {
-      grpname: item.grpname,
-      grptag: item.grptag,
-      adminname: item.adminname,
-      adminid: item.adminid,
-      whosendrequestid: userinfo.uid,
-      whosendrequestname: userinfo.displayName,
-      whosendrequestphoto: userinfo.photoURL,
-      grplistid: item.mygrpid,
-    });
-  };
-  // showing join request is pendding
-  const [penddinglist, setpendding] = useState([]);
-  useEffect(() => {
-    const grprqstRef = ref(db, "grouprequest/");
-    onValue(grprqstRef, (snapshot) => {
-      let arr = [];
-      snapshot.forEach((item) => {
-        arr.push(item.val().grplistid + item.val().whosendrequestid);
-      });
-      setpendding(arr);
-    });
-  }, []);
-  // showing join request is accept
-  const [joinedList, setJoinedList] = useState([]);
+
+  const [invitedJoined, setInvitedJoined] = useState([]);
   useEffect(() => {
     const joinedRef = ref(db, "memberlist/");
     onValue(joinedRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        arr.push(item.val().grplistid + item.val().whosendrequestid);
+        if (
+          userinfo.uid == item.val().whosendrequestid ||
+          userinfo.uid == item.val().whominviteid
+        ) {
+          arr.push(item.val());
+        }
       });
-      setJoinedList(arr);
+      setInvitedJoined(arr);
     });
   }, []);
-
+  let maparray = [...mygrplist, ...invitedJoined];
+  const handlegroupchat = (item) => {
+    navigate("/pages/massage");
+    dispatch(
+      groupchat({
+        groupid: item.mygrpid,
+        groupname: item.grpname || item.groupname,
+        adminname: item.adminname,
+        adminid: item.adminid,
+        chatuser: userinfo.displayName,
+        chatuserid: userinfo.uid,
+        chatuserphoto: userinfo.photoURL,
+      })
+    );
+    localStorage.removeItem(chatwithperson);
+    dispatch(chatwithperson(groupchat));
+  };
   return (
     <div className="boxcontainer relative">
       <div className="tittlebar">
-        <h2>Groups List</h2>
+        <h2>Groups You Can Chat</h2>
       </div>
 
-      {mygrplist.map((item, index) => (
+      {maparray.map((item, index) => (
         <div className="boxinner" key={index}>
           <div className="userimg">
             <img
@@ -79,9 +81,12 @@ function MsgGroup() {
               style={{ width: "80px", height: "80px", borderRadius: "50%" }}
             />
           </div>
-          <div>
+          <div
+            onClick={() => handlegroupchat(item)}
+            style={{ cursor: "pointer" }}
+          >
             <div className="username">
-              <h2>{item.grpname}</h2>
+              <h2>{item.grpname || item.groupname}</h2>
             </div>
             <div className="username">
               <h3>{item.grptag}</h3>
@@ -90,25 +95,7 @@ function MsgGroup() {
               <h3>Admin Name: {item.adminname}</h3>
             </div>
           </div>
-          <div className="grpbtns">
-            {penddinglist.includes(item.mygrpid + userinfo.uid) ? (
-              <>
-                <p style={{ fontWeight: "bold" }}>Join Request Sent</p>
-              </>
-            ) : joinedList.includes(item.mygrpid + userinfo.uid) ? (
-              <>
-                <p style={{ fontWeight: "bold" }}>You are Joined</p>
-              </>
-            ) : (
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => handleJoingrp(item)}
-              >
-                join
-              </Button>
-            )}
-          </div>
+         
         </div>
       ))}
     </div>

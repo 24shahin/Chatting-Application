@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { chatwithperson } from "../Slices/chatwithperson";
 import { useNavigate } from "react-router-dom";
+import { groupchat } from "../Slices/groupchat";
 
 function Friends() {
   const dispatch = useDispatch();
@@ -79,6 +80,13 @@ function Friends() {
           chatwithpersonname: item.rqstsendername,
         })
       );
+      localStorage.removeItem(groupchat);
+      dispatch(
+        groupchat({
+          chatwithpersonid: item.rqstreceiverid,
+          chatwithpersonname: item.rqstreceivername,
+        })
+      );
     } else {
       localStorage.setItem(
         "chatperson",
@@ -96,7 +104,13 @@ function Friends() {
         })
       );
     }
-   
+    localStorage.removeItem(groupchat);
+    dispatch(
+      groupchat({
+        chatwithpersonid: item.rqstreceiverid,
+        chatwithpersonname: item.rqstreceivername,
+      })
+    );
   };
   return (
     <div className="boxcontainer">

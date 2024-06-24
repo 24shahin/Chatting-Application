@@ -17,7 +17,7 @@ function Pages() {
     }
   }, []);
   return (
-    <Grid container spacing={2} style={{ background: "rgb(229 222 140)" }}>
+    <Grid container spacing={2} style={{ background: '#fff' }}>
       <Grid item xs={2}>
         <Navbar />
       </Grid>
