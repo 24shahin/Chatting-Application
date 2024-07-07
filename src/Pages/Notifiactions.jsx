@@ -28,12 +28,11 @@ function Notification() {
     });
   }, []);
   const handleacceptinvite = (item) => {
-    console.log(item.val());
-    // set(push(ref(db, "memberlist/")), {
-    //   ...item.val(),
-    // }).then(() => {
-    //   remove(ref(db, "grpinvite/" + item.iviteid));
-    // });
+    set(push(ref(db, "memberlist/")), {
+      ...item,
+    }).then(() => {
+      remove(ref(db, "grpinvite/" + item.iviteid));
+    });
   };
   const handleRejectinvite = (item) => {
     remove(ref(db, "grpinvite/" + item.iviteid));
@@ -45,7 +44,7 @@ function Notification() {
       </div>
       {inviteShow.map((item, index) => (
         <div key={index}>
-          <p style={{ color: "#fff", fontSize: "22px", margin: "15px 0" }}>
+          <p style={{ fontSize: "22px", margin: "15px 0" }}>
             You have a Notifications from{" "}
             <span style={{ color: "#f27474", fontWeight: "bolder" }}>
               {item.groupname}

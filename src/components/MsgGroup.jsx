@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-
 import {
   getDatabase,
   ref,
@@ -11,13 +9,12 @@ import {
 } from "firebase/database";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {groupchat} from "../Slices/groupchat";
-import {chatwithperson} from "../Slices/chatwithperson";
+import { chatwithperson } from "../Slices/chatwithperson";
 
 function MsgGroup() {
   const db = getDatabase();
-  let dispatch = useDispatch()
-  let navigate = useNavigate()
+  let dispatch = useDispatch();
+  let navigate = useNavigate();
   let userinfo = useSelector((state) => state?.user?.value);
   const [mygrplist, setMyGrpList] = useState([]);
   useEffect(() => {
@@ -53,18 +50,17 @@ function MsgGroup() {
   const handlegroupchat = (item) => {
     navigate("/pages/massage");
     dispatch(
-      groupchat({
-        groupid: item.mygrpid,
+      chatwithperson({
+        groupid: item.mygrpid || item.grplistid || item.grpid,
         groupname: item.grpname || item.groupname,
         adminname: item.adminname,
         adminid: item.adminid,
         chatuser: userinfo.displayName,
         chatuserid: userinfo.uid,
         chatuserphoto: userinfo.photoURL,
+        type: "groupmsg",
       })
     );
-    localStorage.removeItem(chatwithperson);
-    dispatch(chatwithperson(groupchat));
   };
   return (
     <div className="boxcontainer relative">
@@ -74,7 +70,7 @@ function MsgGroup() {
 
       {maparray.map((item, index) => (
         <div className="boxinner" key={index}>
-          <div className="userimg">
+          <div className="userimg" style={{width:'40%'}}>
             <img
               src={userinfo.grpphotoURL}
               alt=""
@@ -83,7 +79,7 @@ function MsgGroup() {
           </div>
           <div
             onClick={() => handlegroupchat(item)}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", width:'60%' }}
           >
             <div className="username">
               <h2>{item.grpname || item.groupname}</h2>
@@ -95,7 +91,6 @@ function MsgGroup() {
               <h3>Admin Name: {item.adminname}</h3>
             </div>
           </div>
-         
         </div>
       ))}
     </div>
