@@ -630,7 +630,10 @@ function Massage() {
                                     <audio src={item.audio} controls />
                                   ) : null}
                                   <span style={{ fontSize: "14px" }}>
-                                    {moment("2024/07/03", "YYYYMMDD").fromNow()}
+                                  {moment(
+                                  item.date,
+                                  "YYYYMMDD h:mm:ss a"
+                                ).fromNow()}
                                   </span>
                                 </div>
                               </div>
@@ -747,7 +750,10 @@ function Massage() {
                                     <audio src={item.audio} controls />
                                   ) : null}
                                   <span style={{ fontSize: "14px" }}>
-                                    {moment("2024/07/03", "YYYYMMDD").fromNow()}
+                                  {moment(
+                                  item.date,
+                                  "YYYYMMDD h:mm:ss a"
+                                ).fromNow()}
                                   </span>
                                 </div>
                               </div>

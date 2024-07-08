@@ -23,7 +23,7 @@ function MsgGroup() {
       let arr = [];
       snapshot.forEach((item) => {
         if (userinfo.uid == item.val().adminid) {
-          arr.push({ ...item.val(), mygrpid: item.key });
+          arr.push({ ...item.val(), groupid: item.key });
         }
       });
       setMyGrpList(arr);
@@ -51,8 +51,8 @@ function MsgGroup() {
     navigate("/pages/massage");
     dispatch(
       chatwithperson({
-        groupid: item.mygrpid || item.grplistid || item.grpid,
-        groupname: item.grpname || item.groupname,
+        groupid: item.groupid,
+        groupname: item.groupname ,
         adminname: item.adminname,
         adminid: item.adminid,
         chatuser: userinfo.displayName,

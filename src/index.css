@@ -460,3 +460,13 @@
   position: absolute;
   bottom: 80px;
 }
+.css-uls1yk-MuiDivider-root {
+  margin-left: 0px !important;
+  list-style: none;
+}
+.css-hhvo2v-MuiListItem-root {
+  align-items: center !important;
+}
+.css-1mcnwpj-MuiList-root {
+  max-width: 100%;
+}
