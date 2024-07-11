@@ -13,7 +13,7 @@ import { activeUser } from "../Slices/userSlice";
 import { getAuth, updateProfile } from "firebase/auth";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { getDatabase, update } from "firebase/database"; // Import update from Firebase database
+import { getDatabase, update } from "firebase/database";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -35,18 +35,16 @@ function ImagesCropper({ profilepic, groupId }) {
   const storage = getStorage();
   const userinfo = useSelector((state) => state?.user?.value);
   const auth = getAuth();
-  const db = getDatabase(); // Initialize the database
+  const db = getDatabase();
 
   const [image, setImage] = useState(defaultSrc);
   const [cropData, setCropData] = useState("#");
   const cropperRef = createRef();
 
-  // Define storage references inside useEffect to update when groupId changes
   const storageRef = ref(storage, `profilePic/${userinfo.uid}`);
-  const storagegrpimgRef = ref(storage, `groupPic/${groupId}`);
+  const storagegrpimgRef = groupId ? ref(storage, `groupPic/${groupId}`) : null;
 
   useEffect(() => {
-    // Reset image and cropData when groupId changes
     setImage(defaultSrc);
     setCropData("#");
   }, [groupId]);
@@ -88,13 +86,16 @@ function ImagesCropper({ profilepic, groupId }) {
           });
         });
       });
-    } else {
+    } else if (storagegrpimgRef) {
       uploadString(storagegrpimgRef, message4, "data_url").then((snapshot) => {
         getDownloadURL(storagegrpimgRef).then((downloadURL) => {
           console.log("File available at", downloadURL);
-          // Update group image URL in Firebase database
           update(ref(db, `grouplist/${groupId}`), {
             grpphotoURL: downloadURL,
+          }).then(() => {
+            console.log("Group photo URL updated successfully");
+          }).catch((error) => {
+            console.error("Error updating group photo URL: ", error);
           });
         });
       });
@@ -118,7 +119,6 @@ function ImagesCropper({ profilepic, groupId }) {
             }}
           />
         </div>
-        {/* <input type="file"  onChange={onChange}/> */}
         <Button
           component="label"
           role={undefined}

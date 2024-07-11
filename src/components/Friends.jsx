@@ -69,7 +69,8 @@ function Friends() {
         chatwithperson({
           chatwithpersonid: item.rqstsenderid,
           chatwithpersonname: item.rqstsendername,
-          type: 'friendmsg',
+          chatwithpersonphoto: item.rqstsenderphoto,
+          type: "friendmsg",
         })
       );
     } else {
@@ -78,7 +79,8 @@ function Friends() {
         chatwithperson({
           chatwithpersonid: item.rqstreceiverid,
           chatwithpersonname: item.rqstreceivername,
-          type: 'friendmsg',
+          chatwithpersonphoto: item.rqstreceiverphotourl,
+          type: "friendmsg",
         })
       );
     }

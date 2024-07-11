@@ -28,13 +28,14 @@ function GroupsList() {
     set(push(ref(db, "grouprequest/")), {
       groupname: item.groupname,
       grouptag: item.grouptag,
+      grpphotoURL: item.grpphotoURL,
       adminname: item.adminname,
       adminid: item.adminid,
       whosendrequestid: userinfo.uid,
       whosendrequestname: userinfo.displayName,
       whosendrequestphoto: userinfo.photoURL,
       groupid: item.groupid,
-    });
+    })
   };
   // showing join request is pendding
   const [penddinglist, setpendding] = useState([]);
@@ -55,7 +56,9 @@ function GroupsList() {
     onValue(joinedRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        arr.push(item.val().groupid + userinfo.uid);
+        if (item.val().whosendrequestid == userinfo.uid) {
+          arr.push(item.val().groupid + userinfo.uid);
+        }
       });
       setJoinedList(arr);
     });
@@ -98,6 +101,7 @@ function GroupsList() {
       chatwithperson({
         groupid: item.groupid,
         groupname: item.groupname,
+        chatwithpersonphoto: item.grpphotoURL,
         adminname: item.adminname,
         adminid: item.adminid,
         chatuser: userinfo.displayName,
@@ -106,7 +110,6 @@ function GroupsList() {
         type: "groupmsg",
       })
     );
-    console.log(item);
   };
 
   return (
@@ -124,7 +127,8 @@ function GroupsList() {
               style={{ width: "80px", height: "80px", borderRadius: "50%" }}
             />
           </div>
-          {joinedList.includes(item.groupid + userinfo.uid) ? (
+          {joinedList.includes(item.groupid + userinfo.uid) ||
+              joinFromInvite.includes(item.groupid + userinfo.uid) ? (
             <div
               onClick={() => Handlegrpchat(item)}
               style={{ cursor: "pointer", width: "33.3%" }}

@@ -468,5 +468,16 @@
   align-items: center !important;
 }
 .css-1mcnwpj-MuiList-root {
-  max-width: 100%;
+  max-width: 100% !important;
+}
+.ProfileContainer{
+  position: relative;
+}
+.userdetails {
+  position: absolute;
+  bottom: -170px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  column-gap: 30px;
 }

@@ -24,6 +24,11 @@ import {
 import ImagesCropper from "./ImagesCropper";
 import { useNavigate } from "react-router-dom";
 import { chatwithperson } from "../Slices/chatwithperson";
+import {
+  getStorage,
+  getDownloadURL,
+  ref as storageRef,
+} from "firebase/storage";
 
 const style = {
   position: "absolute",
@@ -43,6 +48,7 @@ function MyGroups() {
   let navigate = useNavigate();
   let dispatch = useDispatch();
   const menuRefs = useRef([]);
+  const storage = getStorage();
 
   // create group
   const [createGroupButtonShow, setCreateGroupButtonShow] = useState(false);
@@ -72,16 +78,16 @@ function MyGroups() {
   };
   // delet group
   const handleGRPdelet = (item) => {
-    remove(ref(db, "grouplist/" + item.mygrpid));
+    remove(ref(db, "grouplist/" + item.groupid));
   };
 
   // group images modal function
   const [open, setOpen] = useState(false);
   const [currentGroupId, setCurrentGroupId] = useState(null); // Track current group for image update
   const handleModalClose = () => setOpen(false);
-  const handleModalOpen = (groupId) => {
-    console.log(groupId);
-    setCurrentGroupId(groupId);
+  const handleModalOpen = (item) => {
+    console.log(item.groupid);
+    setCurrentGroupId(item.groupid);
     setOpen(true);
   };
 
@@ -157,7 +163,6 @@ function MyGroups() {
     }).then(() => {
       remove(ref(db, "grouprequest/" + item.groupreqid));
     });
-    setAlreadyMem((prev) => [...prev, item.whominviteid + item.groupid]);
   };
   // delet group request
   const handlegrprqstCancle = (item) => {
@@ -191,21 +196,45 @@ function MyGroups() {
   const handleModalinviteClose = () => setOpenInvite(false);
   const handleModalinviteOpen = (item) => {
     setOpenInvite(true);
-    console.log(item);
-    const memberRef = ref(db, "users/");
-    onValue(memberRef, (snapshot) => {
+    const userRef = ref(db, "users/");
+    onValue(userRef, async (snapshot) => {
       let arr = [];
+      const promises = [];
+
       snapshot.forEach((info) => {
         if (userinfo.uid !== info.key) {
-          arr.push({
-            ...info.val(),
+          const userItem = {
+            ...info,
             groupmemid: info.key,
+            username: info.val().username,
+            email: info.val().email,
+            photoURL: info.val().photoURL,
+            userphoto: item.photoURL,
             groupid: item.groupid,
             groupname: item.groupname,
             grouptag: item.grouptag,
-          });
+          };
+          arr.push(userItem);
+
+          // Fetch user's photoURL from storage if it exists
+          const photoURLPromise = getDownloadURL(
+            storageRef(storage, `profilePic/${info.key}`)
+          )
+            .then((downloadURL) => {
+              userItem.userphoto = downloadURL;
+            })
+            .catch((error) => {
+              console.error("Error fetching user photo:", error);
+              // Use default photo if error occurs (e.g., file not found)
+              userItem.userphoto = item.photoURL;
+            });
+
+          promises.push(photoURLPromise);
         }
       });
+
+      // Wait for all promises to complete
+      await Promise.all(promises);
       setInviteList(arr);
     });
   };
@@ -225,7 +254,20 @@ function MyGroups() {
     });
   };
   // showing who can't send invite
-  const [alreadymem, setAlreadyMem] = useState([]);
+  const [alreadymemreq, setAlreadyMemreq] = useState([]);
+  const [alreadymeminvite, setAlreadyMeminvite] = useState([]);
+  const alreadymem = [...alreadymemreq, ...alreadymeminvite];
+
+  useEffect(() => {
+    const memberRef = ref(db, "memberlist/");
+    onValue(memberRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().whosendrequestid + item.val().groupid);
+      });
+      setAlreadyMemreq(arr);
+    });
+  }, []);
   useEffect(() => {
     const memberRef = ref(db, "memberlist/");
     onValue(memberRef, (snapshot) => {
@@ -233,9 +275,10 @@ function MyGroups() {
       snapshot.forEach((item) => {
         arr.push(item.val().whominviteid + item.val().groupid);
       });
-      setAlreadyMem(arr);
+      setAlreadyMeminvite(arr);
     });
   }, []);
+
   // showing whom sent you invite
   const [invitedperson, setInvitedPerson] = useState([]);
   useEffect(() => {
@@ -257,6 +300,7 @@ function MyGroups() {
       chatwithperson({
         groupid: item.groupid,
         groupname: item.groupname,
+        chatwithpersonphoto: item.grpphotoURL,
         adminname: item.adminname,
         adminid: item.adminid,
         chatuser: userinfo.displayName,
@@ -328,7 +372,7 @@ function MyGroups() {
               src={item.grpphotoURL || defaultGroupImage} // Use default image if no group image is available
               alt=""
               style={{ width: "80px", height: "80px", borderRadius: "50%" }}
-              onClick={() => handleModalOpen(item.mygrpid)}
+              onClick={() => handleModalOpen(item)}
             />
             <Modal
               open={open}
@@ -462,11 +506,11 @@ function MyGroups() {
                       <ListItemAvatar>
                         <Avatar
                           alt="Remy Sharp"
-                          src={item.whosendrequestphoto}
+                          src={item.whosendrequestphoto || item.inviteephotoURL}
                         />
                       </ListItemAvatar>
                       <ListItemText
-                        primary={item.whosendrequestname}
+                        primary={item.whosendrequestname || item.inviteename}
                         secondary={
                           <React.Fragment>
                             <Typography
@@ -475,7 +519,7 @@ function MyGroups() {
                               variant="body2"
                               color="text.primary"
                             >
-                              {item.whosendrequestname}
+                              {item.whosendrequestname || item.inviteename}
                             </Typography>
                             {`---is a member of ${item.groupname}`}
                           </React.Fragment>
@@ -532,7 +576,7 @@ function MyGroups() {
             <Box sx={style}>
               <div className="showuserBox">
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  User where you can invite
+                  User, whom you can invite
                 </Typography>
                 {inviteList.map((item, index) => (
                   <List
@@ -545,7 +589,7 @@ function MyGroups() {
                   >
                     <ListItem alignItems="flex-start">
                       <ListItemAvatar>
-                        <Avatar alt="Remy Sharp" src={item.photoURL} />
+                        <Avatar alt="Remy Sharp" src={item.userphoto} />
                       </ListItemAvatar>
                       <ListItemText
                         primary={item.username}
@@ -561,8 +605,12 @@ function MyGroups() {
                           </React.Fragment>
                         }
                       />
+                      {console.log(item)}
 
-                      {alreadymem.includes(item.groupmemid + item.groupid) ? (
+                      {alreadymem.includes(
+                        item.groupmemid + item.groupid ||
+                          item.whosendrequestid + item.groupid
+                      ) ? (
                         <p style={{ fontWeight: "bold", color: "green" }}>
                           Already Member
                         </p>

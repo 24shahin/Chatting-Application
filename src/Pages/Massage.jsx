@@ -508,7 +508,8 @@ function Massage() {
           <Grid item xs={6} style={{ height: "100vh" }}>
             <div className="boxcontainermsg ">
               <div className="msgheader">
-                <h2>
+                <h2 style={{display:'flex', alignItems:'center', columnGap:'15px'}}>
+                <img src={chat?.chatwithpersonphoto} alt="" style={{width:'40px', borderRadius:'50%'}}/>
                   {" "}
                   {chat == null
                     ? "Please Select a Friend or Group"
