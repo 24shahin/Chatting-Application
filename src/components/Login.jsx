@@ -59,48 +59,48 @@ function Login() {
       signInWithEmailAndPassword(auth, regData.email, regData.password)
         .then((userCredential) => {
           SetLoading(false);
-          // if (!userCredential.user.emailVerified) {
-          //   toast.error("Please Varify Your Email First", {
-          //     position: "top-center",
-          //     autoClose: 3000,
-          //     hideProgressBar: false,
-          //     closeOnClick: true,
-          //     pauseOnHover: true,
-          //     draggable: true,
-          //     progress: undefined,
-          //     theme: "dark",
-          //   });
-          // } else {
-          //   toast.success("Login Success", {
-          //     position: "top-center",
-          //     autoClose: 3000,
-          //     hideProgressBar: false,
-          //     closeOnClick: true,
-          //     pauseOnHover: true,
-          //     draggable: true,
-          //     progress: undefined,
-          //     theme: "dark",
-          //   });
-          //   SetRegData({ ...regData, password: "" });
-          //   localStorage.setItem("user", JSON.stringify(userCredential.user));
-          //   dispatch(activeUser(userCredential.user));
-          //   Navigate("/pages");
-          // }
+          if (!userCredential.user.emailVerified) {
+            toast.error("Please Varify Your Email First", {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          } else {
+            toast.success("Login Success", {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+            SetRegData({ ...regData, password: "" });
+            localStorage.setItem("user", JSON.stringify(userCredential.user));
+            dispatch(activeUser(userCredential.user));
+            Navigate("/pages");
+          }
           // ====== if you want email verification does not need
-          toast.success("Login Success", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
-          SetRegData({ ...regData, password: "" });
-          localStorage.setItem("user", JSON.stringify(userCredential.user));
-          dispatch(activeUser(userCredential.user));
-          Navigate("/pages/home");
+          // toast.success("Login Success", {
+          //   position: "top-center",
+          //   autoClose: 3000,
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: true,
+          //   draggable: true,
+          //   progress: undefined,
+          //   theme: "dark",
+          // });
+          // SetRegData({ ...regData, password: "" });
+          // localStorage.setItem("user", JSON.stringify(userCredential.user));
+          // dispatch(activeUser(userCredential.user));
+          // Navigate("/pages/home");
         })
         .catch((error) => {
           const errorCode = error.code;

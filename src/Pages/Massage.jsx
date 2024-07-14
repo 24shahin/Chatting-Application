@@ -243,60 +243,44 @@ function Massage() {
   // Edit msg
   const [isUpdate, setIsUpdate] = useState(false);
   const [dataId, setDataId] = useState(null);
+
   const handleEdit = (item) => {
-    if (chat.type == "friendmsg") {
-      setSendmsg(item.msg);
-      setIsUpdate(true);
-      setDataId(item.msgid);
-      console.log("friend");
-    } else if (chat.type == "groupmsg") {
-      setSendmsg(item.msg);
-      setIsUpdate(true);
-      setDataId(item.msgid);
-      console.log("group");
-    }
+    setSendmsg(item.msg);
+    setIsUpdate(true);
+    setDataId(item.msgid);
   };
 
   const handleUpdatemsg = () => {
-    if (chat.type == "friendmsg") {
-      console.log("friend");
-      const msgRef = ref(db, `massage/${dataId}`);
-      onValue(
-        msgRef,
-        (snapshot) => {
-          const currentData = snapshot.val();
-          // Update only the msg field while keeping the other fields unchanged
-          set(ref(db, `massage/${dataId}`), {
+    const msgRef = ref(
+      db,
+      chat.type === "friendmsg" ? `massage/${dataId}` : `groupmassage/${dataId}`
+    );
+
+    onValue(
+      msgRef,
+      (snapshot) => {
+        const currentData = snapshot.val();
+        // Update only the msg field while keeping the other fields unchanged
+        set(
+          ref(
+            db,
+            chat.type === "friendmsg"
+              ? `massage/${dataId}`
+              : `groupmassage/${dataId}`
+          ),
+          {
             ...currentData,
             msg: sendmsg,
-          });
-          setSendmsg("");
-          setIsUpdate(false);
-        },
-        {
-          onlyOnce: true,
-        }
-      );
-    } else if (chat.type == "groupmsg") {
-      console.log("friend");
-      const msgRef = ref(db, `groupmassage/${dataId}`);
-      onValue(
-        msgRef,
-        (snapshot) => {
-          const currentData = snapshot.val();
-          // Update only the msg field while keeping the other fields unchanged
-          set(ref(db, `groupmassage/${dataId}`), {
-            ...currentData,
-            msg: sendmsg,
-          });
-          setSendmsg("");
-          setIsUpdate(false);
-        },
-        {
-          onlyOnce: true,
-        }
-      );
-    }
+          }
+        );
+        setSendmsg("");
+        setIsUpdate(false);
+        setDataId(null); // Reset the dataId
+      },
+      {
+        onlyOnce: true,
+      }
+    );
   };
   const handleemoji = (e) => {
     setSendmsg(sendmsg + e.emoji);
@@ -508,9 +492,18 @@ function Massage() {
           <Grid item xs={6} style={{ height: "100vh" }}>
             <div className="boxcontainermsg ">
               <div className="msgheader">
-                <h2 style={{display:'flex', alignItems:'center', columnGap:'15px'}}>
-                <img src={chat?.chatwithpersonphoto} alt="" style={{width:'40px', borderRadius:'50%'}}/>
-                  {" "}
+                <h2
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    columnGap: "15px",
+                  }}
+                >
+                  <img
+                    src={chat?.chatwithpersonphoto}
+                    alt=""
+                    style={{ width: "40px", borderRadius: "50%" }}
+                  />{" "}
                   {chat == null
                     ? "Please Select a Friend or Group"
                     : chat?.groupname || chat?.chatwithpersonname}
@@ -631,10 +624,10 @@ function Massage() {
                                     <audio src={item.audio} controls />
                                   ) : null}
                                   <span style={{ fontSize: "14px" }}>
-                                  {moment(
-                                  item.date,
-                                  "YYYYMMDD h:mm:ss a"
-                                ).fromNow()}
+                                    {moment(
+                                      item.date,
+                                      "YYYYMMDD h:mm:ss a"
+                                    ).fromNow()}
                                   </span>
                                 </div>
                               </div>
@@ -751,10 +744,10 @@ function Massage() {
                                     <audio src={item.audio} controls />
                                   ) : null}
                                   <span style={{ fontSize: "14px" }}>
-                                  {moment(
-                                  item.date,
-                                  "YYYYMMDD h:mm:ss a"
-                                ).fromNow()}
+                                    {moment(
+                                      item.date,
+                                      "YYYYMMDD h:mm:ss a"
+                                    ).fromNow()}
                                   </span>
                                 </div>
                               </div>
